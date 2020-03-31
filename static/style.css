@@ -1,0 +1,237 @@
+@charset 'UTF-8';
+@import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
+
+/* reset */
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {margin:0; padding:0; border:0; font-size:100%; font:inherit; font-family: 'Roboto', sans-serif;}
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {display:block;}
+body {line-height:1;}
+ol, ul {list-style:none;}
+blockquote, q {quotes:none;}
+blockquote:before, blockquote:after, q:before, q:after {content:'';	content:none;}
+table {border-collapse:collapse; border-spacing:0;}
+
+/* common */
+a {
+    text-decoration: none;
+}
+
+ol, ul {
+    list-style: none;
+}
+
+/* top-header */
+.top-header {
+    height: 75px;
+    border: 1px solid #e7e7e7;
+    position: relative;
+    width: 100%;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    margin: 0 auto;
+}
+
+.top-header .header-left {
+    margin: auto auto 10px 150px;
+}
+
+.top-header .header-left h1 {
+    color: #000000;
+    line-height: 75px;
+    float: left;
+    font-size: 25px;
+}
+
+.top-header #menu-btn {
+    display: none;
+}
+
+
+@media(min-width: 1180px) {
+    #menu-btn-list {
+        display: none;
+    }
+}
+
+@media(max-width: 1179px) and (min-width: 0px) {
+    .header-left>#menu-btn {
+        display: block;
+        float: left;
+        position: absolute;
+        top: 0;
+        margin: 20px;
+        left: 0;
+        cursor: pointer;
+        background-color: #FFFFFFc;
+        padding: 10px 10px;
+    }
+    #navigation {
+        display: none;
+    }
+    .top-header {
+        background-color: #00348c;
+    }
+    #header-title>a {
+        color: #FFFFFF;
+    }
+    .header-right>ul {
+        display: none;
+    }
+    #banner > #announce {
+       width: 100%
+    }
+    #menu-btn-list{
+    }
+    #menu-btn-list>li{
+        width: 300px;
+        height: 100%;
+        overflow: hidden;
+        z-index: 910;
+        opacity: 1;
+    }
+    .menu-btn{
+        background: #e3e3e3;
+        height: 100%;
+        position: fixed;
+        left: 0;
+        top: 50px;
+    }
+    .top-header .header-left {
+        margin: auto auto 10px 65px;
+    }
+    #menu-btn-list {
+        display: none;
+    }
+}
+
+.header-right{
+    height: 75px;
+    margin: auto 150px 10px auto;
+}
+
+.header-right .info-link li{
+    display: block;
+    float: right;
+}
+
+.header-right a{
+    line-height: 75px;
+    color: #000000;
+    padding: 0 10px;
+    display: block;
+}
+
+.header-right .info-link img {
+    border-radius: 50%
+}
+
+.navigation {
+    color: #FFFFFF;
+    background-color: #00348c;
+    position: relative;
+    border-bottom: 1px solid #ddd;
+    display: block;
+    height: 70px;
+}
+
+.navigation .navigation-menu {
+    display: block;
+    margin: 0px auto 10px 150px;
+    font-size: 20px;
+    padding-top: 25px;
+}
+
+.navigation .navigation-menu li{
+    display: inline;
+    margin: 1em;
+}
+
+#banner > #announce {
+    display: flex;
+    justify-content: center;
+    text: bold;
+    background-color: #ffa500;
+    box-sizing: border-box;
+    position: relative;
+    width: 100%
+    height: 25px;
+}
+
+.map-title {
+    font-size : 18px;
+    font-weight: 600;
+    color: #000;
+    position: relative;
+    width: 100%;
+    margin: 40px;
+}
+
+.coronaMap {
+    top: 50px;
+}
+
+.content-left {
+    height: 100%;
+    width: 49%;
+    float: left;
+}
+
+.content-right {
+    height: 100%;
+    width: 49%;
+    float: right;
+}
+
+#corona-status>h3 {
+    font-size : 18px;
+    font-weight: 600;
+    color: #000;
+    position: relative;
+    width: 100%;
+    margin: 40px;
+}
+
+#status-list>ul>li {
+    display: inline-block;
+    list-style-type: none;
+    float: left;
+    font-size: 20px;
+    padding-top: 8px;
+}
+
+#status-list {
+    text-align: center;
+    margin-left: 35px;
+}
+
+#confirmed {
+    background: #2b75e0;
+    color: #FFFFFF;
+}
+
+#released {
+    background: #123a91;
+    color: #FFFFFF;
+}
+
+#isolated {
+    background: #05afc8;
+    color: #FFFFFF;
+}
+
+#deceased {
+    background: #858585;
+    color: #FFFFFF;
+}
+
+#accumulation {
+    font-size: 13px;
+}
+
+#quarantine {
+    font-size: 13px;
+}
+
+#confirmed-change, #release-change, #isolate-change, #decease-change {
+    font-size: 12.5px;
+}
