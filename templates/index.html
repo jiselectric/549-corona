@@ -51,7 +51,7 @@
             <div id="navigation-menu" class="navigation-menu">
                 <ul>
                     <li> Updates </li>
-                    <li> Self-Assessment </li>
+                    <li><a href="/assessment"> Self-Assessment </a></li>
                     <li> Hotspots </li>
                     <li> Contact </li>
                 </ul>
@@ -66,67 +66,69 @@
             <div id="content-left" class="content-left">
                 <div id="corona-status" class="corona-status">
                     <h3>
-                        <span> Cases in  Korea </span>
+                        <span id="cases-title"> Cases in  Korea </span>
                     </h3>
-                    <div id="status-list" class="status-list">
+                    <div id="status-list" class="status-list"> <!-- position : relative
+                        <button style="
+                          position: absolute;
+                            left: 129px;
+                            top: 93px;
+                        ">+</button> -->
                         <ul>
                             <li>
                                 <div id="confirmed" class="confirmed">
-                                    <div id="confirmed-title">
-                                        <span> Confirmed <br> Cases </span>
+                                    <div id="confirmed-title" class="status-title">
+                                        <div> Confirmed Cases </div>
+                                        <div class="status-title-content">
+                                            <em id="accumulation"> (accumulation) </em>
+                                        </div>
                                     </div>
-                                    <br>
-                                    <div id="confirmed-number" class="confirmed-number">
-                                        <em id="accumulation"> (accumulation) </em>
-                                        <br>
+                                    <div id="confirmed-number" class="confirmed-number status-number">
                                         <span id="confirmed-cases"></span>
                                     </div>
-                                    <br>
-                                    <div id="confirmed-change" class="confirmed-change">
-                                        <span> Daily Change </span>
-                                        <span id="confirm-change"></span>
+                                    <div id="confirmed-change" class="confirmed-change status-change">
+                                        <span id="daily-change"> Daily Change <span id="confirm-change"></span></span>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div id="released" class="released">
-                                    <div>
-                                        <span> Released from <br> Isolation </span><br>
-                                        <em id="quarantine"> (Released from <br> Quarantine) </em>
+                                    <div id="released-title" class="status-title">
+                                        <div> Released from Isolation </div>
+                                        <div class="status-title-content">
+                                            <em id="quarantine"> (Released from Quarantine) </em>
+                                        </div>
                                     </div>
-                                    <div>
+                                    <div id="released-number" class="status-number">
                                         <span id="released-cases"></span>
                                     </div>
-                                    <br>
-                                    <div>
+                                    <div class="status-change">
                                         <span id="release-change"></span>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div id="isolated" class="isolated">
-                                    <div>
-                                        <span> Isolated </span>
+                                    <div class="status-title">
+                                        <div> Isolated </div>
                                     </div>
-                                    <br>
-                                    <div>
+                                    <div class="status-number">
                                         <span id="isolated-cases"></span>
                                     </div>
-                                    <div>
+                                    <div class="status-change">
                                         <span id="isolate-change"></span>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div id="deceased" class="deceased">
-                                    <div>
-                                        <span> Deceased </span>
+                                    <div class="status-title">
+                                        <div> Deceased </div>
                                     </div>
-                                    <br>
-                                    <div>
+                                    <div class="status-number">
                                         <span id="deceased-cases"></span>
                                     </div>
-                                    <div>
+                                    <div class="status-change">
                                         <span id="decease-change"></span>
                                     </div>
                                 </div>

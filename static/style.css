@@ -13,6 +13,7 @@ table {border-collapse:collapse; border-spacing:0;}
 /* common */
 a {
     text-decoration: none;
+    color: inherit;
 }
 
 ol, ul {
@@ -158,7 +159,7 @@ ol, ul {
 }
 
 .map-title {
-    font-size : 18px;
+    font-size : 22px;
     font-weight: 600;
     color: #000;
     position: relative;
@@ -183,7 +184,7 @@ ol, ul {
 }
 
 #corona-status>h3 {
-    font-size : 18px;
+    font-size : 22px;
     font-weight: 600;
     color: #000;
     position: relative;
@@ -197,6 +198,42 @@ ol, ul {
     float: left;
     font-size: 20px;
     padding-top: 8px;
+}
+
+#status-list>ul>li>div{
+    padding-top: 10px;
+    /*display: inline-table;
+    height: 160px;
+    width: 120px;
+    padding: 5px 5px;*/
+}
+
+.status-title {
+    display: table;
+    width: 140px;
+    height: 85px;
+}
+
+.status-title-content{
+    display: table-row;
+}
+
+.status-title-content>em{
+    display: table-cell;
+    vertical-align: bottom;
+}
+
+
+.status-number {
+    display: table;
+    width: 140px;
+    height: 52px;
+}
+
+.status-change {
+    display: table;
+    width: 140px;
+    height: 40px;
 }
 
 #status-list {
@@ -232,6 +269,12 @@ ol, ul {
     font-size: 13px;
 }
 
-#confirmed-change, #release-change, #isolate-change, #decease-change {
+.status-number>span {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#confirm-change, #daily-change, #release-change, #isolate-change, #decease-change {
     font-size: 12.5px;
 }
+

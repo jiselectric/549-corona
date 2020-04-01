@@ -60,4 +60,8 @@ def liveNumber():
 
     return jsonify(result)
 
+@app.route('/assessment')
+def assessment():
+    return render_template('assessment.html')
+
 app.run()
