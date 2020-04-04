@@ -43,29 +43,13 @@ ol, ul {
     font-size: 25px;
 }
 
-.top-header #menu-btn {
-    display: none;
-}
-
-
 @media(min-width: 1180px) {
-    #menu-btn-list {
+    #sidenav {
         display: none;
     }
 }
 
 @media(max-width: 1179px) and (min-width: 0px) {
-    .header-left>#menu-btn {
-        display: block;
-        float: left;
-        position: absolute;
-        top: 0;
-        margin: 20px;
-        left: 0;
-        cursor: pointer;
-        background-color: #FFFFFFc;
-        padding: 10px 10px;
-    }
     #navigation {
         display: none;
     }
@@ -78,27 +62,8 @@ ol, ul {
     .header-right>ul {
         display: none;
     }
-    #menu-btn-list{
-    }
-    #menu-btn-list>li{
-        width: 300px;
-        height: 100%;
-        overflow: hidden;
-        z-index: 910;
-        opacity: 1;
-    }
-    .menu-btn{
-        background: #e3e3e3;
-        height: 100%;
-        position: fixed;
-        left: 0;
-        top: 50px;
-    }
     .top-header .header-left {
         margin: auto auto 10px 65px;
-    }
-    #menu-btn-list {
-        display: none;
     }
     #content-left {
         width: 100%;
@@ -106,6 +71,36 @@ ol, ul {
     }
     #content-right {
         width: 100%;
+    }
+    .slideBtn {
+        transition: .5s;
+        position: fixed;
+        left: 0;
+        cursor: pointer;
+        color: #FFFFFF;
+        font-size: 20px;
+        top: 28px;
+        left: 10px;
+    }
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #e3e3e3;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+    }
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #000000;
+        display: block;
+        transition: 0.3s;
     }
 }
 
@@ -162,6 +157,11 @@ ol, ul {
 
 .coronaMap {
     top: 50px;
+}
+
+#corona-map {
+    margin: 70px;
+    position: relative;
 }
 
 .content-left {
@@ -335,3 +335,4 @@ ol, ul {
 #corona-testing>#testing-info>#testing-number>ul>li>div {
     display: table-cell;
 }
+

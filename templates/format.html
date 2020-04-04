@@ -2,16 +2,13 @@
         <!-- // Header -->
         <div class="top-header">
             <div class="header-left">
-                <button id="menu-btn">
-                    <i class="fas fa-bars"></i>
-                </button>
-                <div class="menu-btn">
-                    <ul id="menu-btn-list">
-                        <li> Updates </li>
-                        <li> Self-Assessment </li>
-                        <li> Hotspots </li>
-                        <li> Contact </li>
-                    </ul>
+                <div id="sidenav" class="sidenav">
+                    <div id="slidebtn" class="slideBtn">&#9776;</div>
+
+                    <a href="/"> Updates </a>
+                    <a href="/assessment"> Assessment </a>
+                    <a href="/hotspots"> Hotspots </a>
+                    <a href="/contact"> Contact </a>
                 </div>
                 <h1 id="header-title" class="header-title"><a href="/"> 549 Hospital COVID-19 Hotline </a></h1>
             </div>
@@ -48,3 +45,28 @@
             </div>
         </div>
     </div>
+
+    <script>
+
+         $(document).ready(function(){
+  $(".slideBtn").click(function(){
+    if($("#sidenav").width() == 0){
+        document.getElementById("sidenav").style.width = "250px";
+        document.getElementById("main-content").style.paddingRight = "250px";
+        document.getElementById("slidebtn").style.paddingRight = "250px";
+    }else{
+        document.getElementById("sidenav").style.width = "0";
+        document.getElementById("main-content").style.paddingRight = "0";
+        document.getElementById("slidebtn").style.paddingRight = "0";
+    }
+  });
+});
+
+    $(window).resize(function() {
+        var windowWidth = $(window).width();
+
+        if(windowWidth > 1180) {
+            $('#menu-btn-list').hide();
+        }
+    });
+    </script>
