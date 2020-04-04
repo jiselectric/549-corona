@@ -56,12 +56,43 @@ def liveNumber():
     result['released'] = [released_isolation, released_isolation_change]
     result['isolated'] = [isolated, isolated_change]
     result['deceased'] = [deceased_cases, deceased_change]
-    print(result)
 
     return jsonify(result)
+
+@app.route('/testResult')
+def testResult():
+    res = requests.get('http://ncov.mohw.go.kr/en/')
+    soup = BeautifulSoup(res.text, 'html.parser')
+    div = soup.find('div', {'class': 'misi_list'})
+    spans = div.findAll('span')
+    confirm = soup.find('div', {'class': 'mps_list'})
+    positive = confirm.findAll('span')
+
+    result = {}
+
+    test_performed = spans[1].text
+    test_concluded = spans[3].text
+    test_positivity = spans[5].text
+    test_positive = positive[1].text
+
+    result['performed'] = [test_performed]
+    result['concluded'] = [test_concluded]
+    result['positivity'] = [test_positivity]
+    result['positive'] = [test_positive]
+
+    return jsonify(result)
+
 
 @app.route('/assessment')
 def assessment():
     return render_template('assessment.html')
+
+@app.route('/hotspots')
+def hotspots():
+    return render_template('hotspots.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 app.run()

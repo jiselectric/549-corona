@@ -70,16 +70,13 @@ ol, ul {
         display: none;
     }
     .top-header {
-        background-color: #00348c;
+        background-color: #415985;
     }
     #header-title>a {
         color: #FFFFFF;
     }
     .header-right>ul {
         display: none;
-    }
-    #banner > #announce {
-       width: 100%
     }
     #menu-btn-list{
     }
@@ -102,6 +99,13 @@ ol, ul {
     }
     #menu-btn-list {
         display: none;
+    }
+    #content-left {
+        width: 100%;
+        margin-left: 0;
+    }
+    #content-right {
+        width: 100%;
     }
 }
 
@@ -128,7 +132,7 @@ ol, ul {
 
 .navigation {
     color: #FFFFFF;
-    background-color: #00348c;
+    background-color: #415985;
     position: relative;
     border-bottom: 1px solid #ddd;
     display: block;
@@ -145,17 +149,6 @@ ol, ul {
 .navigation .navigation-menu li{
     display: inline;
     margin: 1em;
-}
-
-#banner > #announce {
-    display: flex;
-    justify-content: center;
-    text: bold;
-    background-color: #ffa500;
-    box-sizing: border-box;
-    position: relative;
-    width: 100%
-    height: 25px;
 }
 
 .map-title {
@@ -197,7 +190,7 @@ ol, ul {
     list-style-type: none;
     float: left;
     font-size: 20px;
-    padding-top: 8px;
+    padding-top: 10px;
 }
 
 #status-list>ul>li>div{
@@ -223,7 +216,6 @@ ol, ul {
     vertical-align: bottom;
 }
 
-
 .status-number {
     display: table;
     width: 140px;
@@ -239,6 +231,7 @@ ol, ul {
 #status-list {
     text-align: center;
     margin-left: 35px;
+    position: relative;
 }
 
 #confirmed {
@@ -278,3 +271,67 @@ ol, ul {
     font-size: 12.5px;
 }
 
+#status-list>.add-sum {
+    display: inline;
+    position: absolute;
+    color: #FFFFFF;
+    border-radius: 50%;
+    height: 5px;
+    width: 5px;
+}
+
+#status-list>.sum-first {
+    left: 136px;
+    top: 125px;
+}
+
+#status-list>.add-first {
+    left: 276px;
+    top: 125px;
+}
+
+#status-list>.add-second {
+    left: 417px;
+    top: 125px;
+}
+
+#corona-testing {
+    float: left;
+    position: relative;
+    margin: 28px;
+    width: 100%;
+    padding: 15px;
+}
+
+#corona-testing>h3>#testing-title {
+    font-size : 22px;
+    font-weight: 600;
+    color: #000;
+}
+
+#corona-testing>#testing-info>div {
+    float: left;
+    width: 41%;
+    height: 200px;
+    margin-top: 40px;
+}
+
+#corona-testing>#testing-info>#testing-number {
+    background-color: #eafeff
+}
+
+#corona-testing>#testing-info>#testing-chart {
+    background-color: #f2f2f2
+}
+
+
+#corona-testing>#testing-info>#testing-number>ul>li {
+    display: inline-block;
+    list-style-type: none;
+    text-align: cetner;
+    padding-top: 10px;
+}
+
+#corona-testing>#testing-info>#testing-number>ul>li>div {
+    display: table-cell;
+}

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-<head> <!--여기서부터 header -->
+<head>
     <meta charset="UTF-8">
     <title> 549 COVID-19 Hotline</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css">
     <script src="{{url_for('static', filename='jquery-3.4.1.min.js')}}"></script>
     <script src="{{url_for('static', filename='jquery.svg.min.js')}}"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -50,30 +51,27 @@
         <div id="navigation" class="navigation">
             <div id="navigation-menu" class="navigation-menu">
                 <ul>
-                    <li> Updates </li>
+                    <li><a href="/"> Updates </a></li>
                     <li><a href="/assessment"> Self-Assessment </a></li>
-                    <li> Hotspots </li>
-                    <li> Contact </li>
+                    <li><a href="/hotspots"> Hotspots </a></li>
+                    <li><a href="/contact"> Contact </a></li>
                 </ul>
             </div>
         </div>
         <!-- // Banner -->
-        <div id="banner" class="banner">
-            <span id="announce" class="announce"> Notice : asdasdasdasdasdasdasdasdasdsadasdasdasd </span>
-        </div>
         <!-- // Main Content -->
-        <div id="main-content" class="main-content"> <!-- 여기까지 헤더 -->
+        <div id="main-content" class="main-content">
+            <!-- Content Left -->
             <div id="content-left" class="content-left">
+                <!-- Corona Status -->
                 <div id="corona-status" class="corona-status">
                     <h3>
                         <span id="cases-title"> Cases in  Korea </span>
                     </h3>
-                    <div id="status-list" class="status-list"> <!-- position : relative
-                        <button style="
-                          position: absolute;
-                            left: 129px;
-                            top: 93px;
-                        ">+</button> -->
+                    <div id="status-list" class="status-list">
+                        <p class="add-sum sum-first"> = </p>
+                        <p class="add-sum add-first"> + </p>
+                        <p class="add-sum add-second"> + </p>
                         <ul>
                             <li>
                                 <div id="confirmed" class="confirmed">
@@ -136,14 +134,54 @@
                         </ul>
                     </div>
                 </div>
+                <!-- Corona Testing / Graph -->
+                <div id="corona-testing" class="corona-testing">
+                    <h3>
+                        <span id="testing-title"> Testing in Korea</span>
+                    </h3>
+                    <div id="testing-info">
+                        <div id="testing-number">
+                            <ul>
+                                <li>
+                                    <div>
+                                        <span> Tests Performed </span>
+                                    </div>
+                                    <div>
+                                        <span id="performed-cases"></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <span> Tests Concluded </span>
+                                    </div>
+                                    <div>
+                                        <span id="concluded-cases"></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div>
+                                        <span> Positivity Rate </span>
+                                    </div>
+                                    <div>
+                                        <span id="positivity-rate"></span>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="testing-chart">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
+            <!-- Content Right -->
             <div id="content-right" class="content-right">
                 <h2 id="map-title" class="map-title"> Confirmed Patients by City and Province </h2>
                 <div id="corona-map" class="corona-map"></div>
             </div>
-        </div> <!-- 여기서부터 footer -->
+        </div>
     </div>
-</body> <!-- 여기까지 footer -->
+</body>
 <script>
     $('#menu-btn').click(function(){
         $('#menu-btn-list').toggle();
@@ -180,26 +218,38 @@
        $('#decease-change').html(deceasedChange);
     });
 
-    /*
     $.ajax({
-       url: '/liveNumber',
-       method: 'GET'
-    }).done(function(data) {
-       var confirm = data.confirmed[0];
-       var confirmChange = data.confirmed[1];
-       var released = data.released[0];
-       var releasedChange = data.released[1];
-       var isolate = data.isolated[0];
-       var isolateChange = data.isolated[1];
-       var deceased = data.deceased[0];
-       var deceasedChange = data.deceasedChange[1];
+        url: '/testResult',
+        method: 'GET'
+    }).done(function (data) {
+        var perform = data['performed'][0];
+        var conclude = data['concluded'][0];
+        var positive = data['positive'][0];
+        var positivity = data['positivity'][0];
 
-       $('#confirmed-cases').html(confirm);
-       console.log(confirm);
-       $('#confirm-change').html(confirmChange);
+        $('#performed-cases').html(perform);
+        $('#concluded-cases').html(conclude);
+        $('#positivity-rate').html(positivity);
 
+        var performNum = parseInt(perform.replace(/,/gi, ""));
+        var concludeNum = parseInt(conclude.replace(/,/gi, ""));
+        var positiveNum = parseInt(positive.replace(/,/gi, ""));
+
+        var testing = performNum - concludeNum;
+        var negative = concludeNum - positiveNum;
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data : {
+                datasets: [{
+                    data : [testing, positiveNum, negative],
+                    backgroundColor: ['#50bcdf','#ffa999','f7e600']
+                }]
+            }
+        });
     });
-    */
+
 
     loadMap = function(json){
 
@@ -212,7 +262,7 @@
 
                 if(json.hasOwnProperty("map_city"+i)){
                     var data = json["map_city"+i];
-                    var num = parseInt(data[1].replace(/,/gi, "")); // 숫자로 변환
+                    var num = parseInt(data[1].replace(/,/gi, "")); // Convert to Number
                     var city = data[0];
                     var before = data[2];
                     var color = "#E2E2E2";
