@@ -164,7 +164,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <div id="testing-chart">
+                        <div id="testing-chart" style="height:200px;width:41%;">
                             <canvas id="myChart"></canvas>
                         </div>
                     </div>
@@ -233,6 +233,8 @@
         var concludeNum = parseInt(conclude.replace(/,/gi, ""));
         var positiveNum = parseInt(positive.replace(/,/gi, ""));
 
+
+
         var testing = performNum - concludeNum;
         var negative = concludeNum - positiveNum;
 
@@ -240,14 +242,27 @@
         var myChart = new Chart(ctx, {
             type: 'doughnut',
             data : {
+                labels : ['testing', 'positive', 'negative'],
                 datasets: [{
                     data : [testing, positiveNum, negative],
-                    backgroundColor: ['#50bcdf','#ffa999','f7e600']
+                    backgroundColor: ['#50bcdf','#ffa999','#f7e600']
                 }]
+            },
+            options : {
+                legend:{
+                    display: false
+                },
+                responsive: false,
+                devicePixelRatio: 3,
+                maintainAspectRatio: false
             }
         });
-    });
+        //console.log(document.getElementById('myChart').style.height );
+        //document.getElementById('myChart').style.height = '150px';
+        //console.log(document.getElementById('myChart').style.height );
+        myChart.resize();
 
+    });
 
     loadMap = function(json){
 
