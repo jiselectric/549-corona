@@ -11,10 +11,33 @@
 <body>
     {% include 'format.html' %}
     <div id="assessment-main" class="assessment-main">
-        <div id="assessment-content">
-            <div id="question-content" class="question-content"></div>
-            <div id="answer-content" class="answer-content"></div>
+        <div id="question-content">
+            <div id="question-text">
+                <span> Have you been within 6 feet of a person with a lab-confirmed case of COVID-19 for at
+                    least 5 minutes, or had direct contact with their mucus or saliva, in the past 14 days? </span>
+                <input type="hidden" name="question_number">
+            </div>
+        </div>
+        <div id="answer-content">
+            <div id="answer-yes">
+                <label class="container">
+                    <span class="answer-type"> Yes </span>
+                    <input type="radio" name="answer">
+                    <input type="hidden">
+                    <span class="checkmark"></span>
+                </label>
+                <label class="container">
+                    <span class="answer-type"> No </span>
+                    <input type="radio" name="answer">
+                    <input type="hidden">
+                    <span class="checkmark"></span>
+                </label>
+            </div>
+        </div>
+        <div id="page-button">
         </div>
     </div>
 </body>
+<script>
+</script>
 </html>

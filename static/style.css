@@ -10,6 +10,7 @@ blockquote, q {quotes:none;}
 blockquote:before, blockquote:after, q:before, q:after {content:'';	content:none;}
 table {border-collapse:collapse; border-spacing:0;}
 
+
 /* common */
 a {
     text-decoration: none;
@@ -336,3 +337,98 @@ ol, ul {
     display: table-cell;
 }
 
+/** Self Assessment **/
+#assessment-main {
+    height: 650px;
+}
+
+#assessment-main>#question-content {
+    height: 30%;
+    width: 65%;
+    //background-color: #e3e3e3;
+    margin: auto auto auto auto;
+    //border-bottom: .1px solid #000000;
+}
+
+#assessment-main>#question-content>#question-text {
+    font-size: 23px;
+    padding-top: 10%;
+}
+
+#assessment-main>#answer-content {
+    height: 30%;
+    width: 65%;
+    //background-color: red;
+    margin: auto auto auto auto;
+}
+
+#assessment-main>#answer-content>.container {
+    margin-top: 20px;
+}
+
+/** Radio Button **/
+#assessment-main>#answer-content>div>.container {
+  display: block;
+  position: relative;
+  margin-bottom: 12px;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+#assessment-main>#answer-content>div>.container>input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+  top: 9px;
+  left: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: white;
+}
