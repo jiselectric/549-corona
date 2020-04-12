@@ -1,316 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title> 549 COVID-19 Hotline</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.9/css/all.css">
-    <script src="{{url_for('static', filename='jquery-3.4.1.min.js')}}"></script>
-    <script src="{{url_for('static', filename='jquery.svg.min.js')}}"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
-</head>
+{% include 'header.html' %}
 <body>
-    <div class="container">
-        <!-- // Header -->
-        <div class="top-header">
-            <div class="header-left">
-                <div id="sidenav" class="sidenav">
-                    <div id="slidebtn" class="slideBtn"> &#9776; </div>
-                    <a href="/"> Updates </a>
-                    <a href="/assessment"> Assessment </a>
-                    <a href="/hotspots"> Hotspots </a>
-                    <a href="/contact"> Contact </a>
-                </div>
-                <h1 id="header-title" class="header-title"><a href="/"> 549 Hospital COVID-19 Hotline </a></h1>
-            </div>
-            <div class="header-right">
-                <ul class="info-link">
-                    <li class="usfk">
-                        <a href="https://www.usfk.mil/Media/News/Article/2070556/usfk-covid-19-information/" target="_blank">
-                            <img src="static/usfk.png" alt="usfk_info" width="25px" height="25px">
-                        </a>
-                    </li>
-                    <li class="kcdc">
-                        <a href="http://ncov.mohw.go.kr/en/" target="_blank">
-                            <img src="static/kcdc.png" alt="kcdc_info" width="25px" height="25px">
-                        </a>
-                    </li>
-                    <li class="us-gov">
-                        <a href="https://www.usa.gov/coronavirus" target="_blank">
-                            <img src="static/us-gov.png" alt="us-gov_info" width="25px" height="25px">
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- // Navigation -->
-        <div id="navigation" class="navigation">
-            <div id="navigation-menu" class="navigation-menu">
-                <ul>
-                    <li><a href="/"> Updates </a></li>
-                    <li><a href="/assessment"> Self-Assessment </a></li>
-                    <li><a href="/hotspots"> Hotspots </a></li>
-                    <li><a href="/contact"> Contact </a></li>
-                </ul>
-            </div>
-        </div>
-        <!-- // Banner -->
-        <!-- // Main Content -->
-        <div id="main-content" class="main-content">
-            <!-- Content Left -->
-            <div id="content-left" class="content-left">
-                <!-- Corona Status -->
-                <div id="corona-status" class="corona-status">
-                    <h3>
-                        <span id="cases-title"> Cases in  Korea </span>
-                    </h3>
-                    <div id="status-list" class="status-list">
-                        <p class="add-sum sum-first"> = </p>
-                        <p class="add-sum add-first"> + </p>
-                        <p class="add-sum add-second"> + </p>
-                        <ul>
-                            <li>
-                                <div id="confirmed" class="confirmed">
-                                    <div id="confirmed-title" class="status-title">
-                                        <div> Confirmed Cases </div>
-                                        <div class="status-title-content">
-                                            <em id="accumulation"> (accumulation) </em>
-                                        </div>
-                                    </div>
-                                    <div id="confirmed-number" class="confirmed-number status-number">
-                                        <span id="confirmed-cases"></span>
-                                    </div>
-                                    <div id="confirmed-change" class="confirmed-change status-change">
-                                        <span id="daily-change"> Daily Change <span id="confirm-change"></span></span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="released" class="released">
-                                    <div id="released-title" class="status-title">
-                                        <div> Released from Isolation </div>
-                                        <div class="status-title-content">
-                                            <em id="quarantine"> (Released from Quarantine) </em>
-                                        </div>
-                                    </div>
-                                    <div id="released-number" class="status-number">
-                                        <span id="released-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="release-change"></span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="isolated" class="isolated">
-                                    <div class="status-title">
-                                        <div> Isolated </div>
-                                    </div>
-                                    <div class="status-number">
-                                        <span id="isolated-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="isolate-change"></span>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div id="deceased" class="deceased">
-                                    <div class="status-title">
-                                        <div> Deceased </div>
-                                    </div>
-                                    <div class="status-number">
-                                        <span id="deceased-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="decease-change"></span>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- Corona Testing / Graph -->
-                <div id="corona-testing" class="corona-testing">
-                    <h3>
-                        <span id="testing-title"> Testing in Korea</span>
-                    </h3>
-                    <div id="testing-info">
-                        <div id="testing-number">
-                            <ul>
-                                <li>
-                                    <div>
-                                        <span> Tests Performed </span>
-                                    </div>
-                                    <div>
-                                        <span id="performed-cases"></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <span> Tests Concluded </span>
-                                    </div>
-                                    <div>
-                                        <span id="concluded-cases"></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <span> Positivity Rate </span>
-                                    </div>
-                                    <div>
-                                        <span id="positivity-rate"></span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="testing-chart" style="height:200px;width:41%;">
-                            <canvas id="myChart"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Content Right -->
-            <div id="content-right" class="content-right">
-                <h2 id="map-title" class="map-title"> Confirmed Patients by City and Province </h2>
-                <div id="corona-map" class="corona-map">
-                </div>
-            </div>
-        </div>
+    <div id="map">
     </div>
 </body>
 <script>
-    $(document).ready(function(){
-        $(".slideBtn").click(function(){
-            if($("#sidenav").width() == 0){
-                document.getElementById("sidenav").style.width = "250px";
-                document.getElementById("slidebtn").style.paddingRight = "250px";
-            }else{
-                document.getElementById("sidenav").style.width = "0";
-                document.getElementById("slidebtn").style.paddingRight = "0";
-            }
-        });
-    });
+    getCurrentDate = function(){
+        var now = new Date();
+        var y = now.getFullYear();
+        var m = now.getMonth() + 1;
+        var d = now.getDate();
 
+        m = m < 10 ? '0'+m : ''+m;
+        d = d < 10 ? '0'+d : ''+d;
+        return y+'-'+m'-'+d;
 
-    $.ajax({
-       url: '/liveNumber',
-       method: 'GET'
-    }).done(function(data) {
-       var confirm = data.confirmed[0];
-       var confirmChange = data.confirmed[1];
-       var release = data.released[0];
-       var releaseChange = data.released[1];
-       var isolate = data.isolated[0];
-       var isolateChange = data.isolated[1];
-       var deceased = data.deceased[0];
-       var deceasedChange = data.deceased[1];
-
-       $('#confirmed-cases').html(confirm);
-       $('#confirm-change').html(confirmChange);
-       $('#released-cases').html(release);
-       $('#release-change').html(releaseChange);
-       $('#isolated-cases').html(isolate);
-       $('#isolate-change').html(isolateChange);
-       $('#deceased-cases').html(deceased);
-       $('#decease-change').html(deceasedChange);
-    });
-
-    $.ajax({
-        url: '/testResult',
-        method: 'GET'
-    }).done(function (data) {
-        var perform = data['performed'][0];
-        var conclude = data['concluded'][0];
-        var positive = data['positive'][0];
-        var positivity = data['positivity'][0];
-
-        $('#performed-cases').html(perform);
-        $('#concluded-cases').html(conclude);
-        $('#positivity-rate').html(positivity);
-
-        var performNum = parseInt(perform.replace(/,/gi, ""));
-        var concludeNum = parseInt(conclude.replace(/,/gi, ""));
-        var positiveNum = parseInt(positive.replace(/,/gi, ""));
-
-
-
-        var testing = performNum - concludeNum;
-        var negative = concludeNum - positiveNum;
-
-        var ctx = document.getElementById('myChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data : {
-                labels : ['testing', 'positive', 'negative'],
-                datasets: [{
-                    data : [testing, positiveNum, negative],
-                    backgroundColor: ['#50bcdf','#ffa999','#f7e600']
-                }]
-            },
-            options : {
-                legend:{
-                    display: false
-                },
-                responsive: false,
-                devicePixelRatio: 3,
-                maintainAspectRatio: false
-            }
-        });
-        //console.log(document.getElementById('myChart').style.height );
-        //document.getElementById('myChart').style.height = '150px';
-        //console.log(document.getElementById('myChart').style.height );
-        myChart.resize();
-
-    });
-
-    loadMap = function(json){
-
-        $.ajax({
-            url : '/svg',
-            method : 'GET'
-        }).done(function(html){
-            $("#corona-map").html(html);
-            for(var i=1;i<19;i++){
-
-                if(json.hasOwnProperty("map_city"+i)){
-                    var data = json["map_city"+i];
-                    var num = parseInt(data[1].replace(/,/gi, "")); // Convert to Number
-                    var city = data[0];
-                    var before = data[2];
-                    var color = "#E2E2E2";
-                    if(num < 20){
-                        color = "#ffe8e7";
-                    }
-                    else if(num > 20 && num < 50){
-                        color = "#F6BDC0";
-                    } else if(num > 50 && num < 300) {
-                        color = '#F1959B'
-                    } else if(num > 300 && num < 500) {
-                        color = '#F07470'
-                    } else if(num > 500 && num < 5000) {
-                        color = '#EA4C46'
-                    } else if(num > 5000 && num < 10000) {
-                        color = '#DC1C13'
-                    }
-                    $("#corona-map").find(".map_city"+i).attr('fill', color);
-                    $("#corona-map").find(".map_city"+i).parent().data('city', city);
-                    $("#corona-map").find(".map_city"+i).parent().data('before', before);
-                    $("#corona-map").find(".map_city"+i).parent().attr('title', num);
-                }
-                else{
-
-                    $("#corona-map").find(".map_city"+i).attr('fill', "#E2E2E2");
-                }
-            }
-        });
     }
 
     $.ajax({
-        url : '/corona',
+        url : '/getSVG',
         method : 'GET'
-    }).done(function(result){
-        loadMap(result);
+    }).done(function(html){
+        $('#map').html(html);
     });
+
+    $.ajax({
+        url : '/getLiveNumber',
+        method : 'GET',
+        data : {date : now}
+    }).done(function(json){
+        console.log(json);
+    });
+
 </script>
 </html>
+

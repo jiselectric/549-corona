@@ -1,101 +1,106 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
+# from urllib.request import urlretrieve
+import os
 import requests
-import datetime
-from bs4 import BeautifulSoup
+import pymysql
 import time
-
+import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
+from bs4 import BeautifulSoup
 
 app = Flask(__name__)
+conn = pymysql.connect(host='localhost', user='root', password='123456789', db='corona')
 
-res = requests.get("http://ncov.mohw.go.kr/static/image/map/map_main_new.svg")
-soup = BeautifulSoup(res.text, 'html.parser')
-svg = soup.find('svg')
-
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-@app.route('/svg')
-def getSvg():
-    return str(svg)
+@app.route('/getSVG')
+def getSVG():
+    f = open('static/map_main_new.tag', 'r')
+    svgHTML = " ".join(f.readlines())
+    f.close()
+    return svgHTML
 
-@app.route('/corona')
-def getCorona():
-    res = requests.get("http://ncov.mohw.go.kr/")
-
-    soup = BeautifulSoup(res.text, 'html.parser')
-    div = soup.find("div", {"id": "main_maplayout"})
-    buttons = div.findAll("button")
+@app.route('/getLiveNumber')
+def getLiveNumber():
+    date = requests.args.get('date') #2020-04-11
+    now = datetime.datetime.strftime(date, '%Y-%m-%d')
+    yesterday = str((now - datetime.timedelta(days=1)))[:10]
     result = {}
+
+    curs = conn.cursor(pymysql.cursors.DictCursor)
+    sql = 'SELECT * FROM status WHERE REGIST_DTM=%s'
+    curs.execute(sql, yesterday)
+    result['status'] = curs.fetchall()
+
+    sql = 'SELECT * FROM location WHERE REGIST_DTM=%s'
+    curs.execute(sql, yesterday)
+    result['location'] = curs.fetchall()
+
+    return jsonify(result)
+
+
+def downloadSVG():
+    res = requests.get('http://ncov.mohw.go.kr/')
+    soup = BeautifulSoup(res.text, 'html.parser')
+    div = soup.find('div', {'id' : 'main_maplayout'})
+
+    buttons = ''
+    for i in range(1, 19):
+        buttons += "<button type='button' data-city='map_city{}'><span class='name'></span><span class='num'></span><span class='before'></span></button>".format(i)
+
+    res = requests.get('http://ncov.mohw.go.kr/static/image/map/map_main_new.svg')
+    soup = BeautifulSoup(res.text, 'html.parser')
+    svg = soup.find('svg')
+    paths = svg.find_all('path')
+    for path in paths:
+        path['fill'] = '#FFFFFF'
+    polygons = svg.find_all('polygon')
+    for polygon in polygons:
+        polygon['fill'] = '#FFFFFF'
+    f = open('static/map_main_new.tag', 'w')
+    f.write(buttons)
+    f.write(str(svg))
+    f.close()
+
+def crawlLocationConfirm():
+    res = requests.get('http://ncov.mohw.go.kr/')
+    soup = BeautifulSoup(res.text, 'html.parser')
+    curs = conn.cursor()
+    buttons = soup.find('div', {'id': 'main_maplayout'}).find_all('button')
     for button in buttons:
-        city_name = button.find("span", {"class": "name"}).text
-        city_num = button.find("span", {"class": "num"}).text
-        city_before = button.find("span", {"class": "before"}).text
-        result[button["data-city"]] = [city_name, city_num, city_before]
+        spans = button.find_all('span')
+        LOC_NUM = button['data-city'].replace('map_city', '')
+        LOC_NAME = spans[0].text
+        CONFIRM = spans[1].text.replace(',', '')
+        print(LOC_NUM, LOC_NAME, CONFIRM)
+        sql = "INSERT INTO location(LOC_NUM, LOC_NAME, CONFIRM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))"
+        curs.execute(sql, (LOC_NUM, LOC_NAME, CONFIRM))
 
+    lis = soup.find('ul', {'class': 'liveNum'}).find_all('li')
+    for STTUS_NUM, li in enumerate(lis[1:]):
+        STTUS_NAME = li.find('strong').contents[0]
+        NUM = li.find('span', {'class':'num'}).text.replace(',', '')
+        print(STTUS_NUM, STTUS_NAME, NUM)
+        sql = 'INSERT INTO status(STTUS_NUM, STTUS_NAME, NUM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
+        curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
+    conn.commit()
 
-    return jsonify(result)
+if __name__ == "__main__":
+    if 'map_main_new.tag' not in os.listdir('static'):
+        downloadSVG()
+        print('SVG Downloaded')
 
-@app.route('/liveNumber')
-def liveNumber():
-    res = requests.get('http://ncov.mohw.go.kr/en/')
-    soup = BeautifulSoup(res.text, 'html.parser')
-    div = soup.find('div', {"class": "mps_list"})
-    spans = div.findAll('span')
-    result = {}
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24, start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
+                      id='jiselectric_location')
+    scheduler.start()
+    print('Scheduler jiselectic-location Registered!')
 
-
-    confirmed_cases = spans[1].text
-    confirmed_cases_change = spans[2].text
-    released_isolation = spans[4].text
-    released_isolation_change = spans[5].text
-    isolated = spans[7].text
-    isolated_change = spans[8].text
-    deceased_cases = spans[10].text
-    deceased_change = spans[11].text
-
-    result['confirmed'] = [confirmed_cases, confirmed_cases_change]
-    result['released'] = [released_isolation, released_isolation_change]
-    result['isolated'] = [isolated, isolated_change]
-    result['deceased'] = [deceased_cases, deceased_change]
-
-    return jsonify(result)
-
-@app.route('/testResult')
-def testResult():
-    res = requests.get('http://ncov.mohw.go.kr/en/')
-    soup = BeautifulSoup(res.text, 'html.parser')
-    div = soup.find('div', {'class': 'misi_list'})
-    spans = div.findAll('span')
-    confirm = soup.find('div', {'class': 'mps_list'})
-    positive = confirm.findAll('span')
-
-    result = {}
-
-    test_performed = spans[1].text
-    test_concluded = spans[3].text
-    test_positivity = spans[5].text
-    test_positive = positive[1].text
-
-    result['performed'] = [test_performed]
-    result['concluded'] = [test_concluded]
-    result['positivity'] = [test_positivity]
-    result['positive'] = [test_positive]
-
-    return jsonify(result)
-
-
-@app.route('/assessment')
-def assessment():
-    return render_template('assessment.html')
-
-@app.route('/hotspots')
-def hotspots():
-    return render_template('hotspots.html')
-
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-app.run()
+    try:
+        app.run()
+    except:
+        scheduler.remove_job('jiselectric_location')
+        scheduler.shutdown()
+        print('Scheduler jiselectric_location removed')
