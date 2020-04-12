@@ -91,9 +91,10 @@ if __name__ == "__main__":
     if 'map_main_new.tag' not in os.listdir('static'):
         downloadSVG()
         print('SVG Downloaded')
-
+    crawlLocationConfirm()
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24, start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
+    scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
+                      start_date='{} 20:48:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
     scheduler.start()
     print('Scheduler jiselectic-location Registered!')
@@ -104,3 +105,23 @@ if __name__ == "__main__":
         scheduler.remove_job('jiselectric_location')
         scheduler.shutdown()
         print('Scheduler jiselectric_location removed')
+
+"""
+if __name__ == "__main__":
+    if 'map_main_new.tag' not in os.listdir('static'):
+        downloadSVG()
+        print('SVG Downloaded')
+
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=crawlLocationConfirm, trigger='interval', minutes=1, start_date='{} 20:47:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
+                      id='jiselectric_location')
+    scheduler.start()
+    print('Scheduler jiselectic-location Registered!')
+
+    try:
+        app.run()
+    except:
+        scheduler.remove_job('jiselectric_location')
+        scheduler.shutdown()
+        print('Scheduler jiselectric_location removed')
+"""
