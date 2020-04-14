@@ -2,7 +2,12 @@
 <html lang="en">
 {% include 'header.html' %}
 <body>
-    <div id="map">
+    <div class="map-wrapper">
+        <div id="map">
+        </div>
+        <div id="hello">
+
+        </div>
     </div>
 </body>
 <script>
@@ -14,9 +19,11 @@
 
         m = m < 10 ? '0'+m : ''+m;
         d = d < 10 ? '0'+d : ''+d;
-        return y+'-'+m'-'+d;
+        return y+'-'+m+'-'+d;
 
     }
+
+    var now = getCurrentDate()
 
     $.ajax({
         url : '/getSVG',
@@ -26,11 +33,42 @@
     });
 
     $.ajax({
-        url : '/getLiveNumber',
-        method : 'GET',
-        data : {date : now}
-    }).done(function(json){
+        url: '/getLiveNumber',
+        method: 'GET',
+        data: {date : now}
+    }).done(function (json) {
+        var loc = json.location;
         console.log(json);
+        $.each(loc, function(pIndex, pValue){
+            var city = 'map_city' + pValue.LOC_NUM;
+            var confirm = parseInt(pValue.CONFIRM);
+            var color = '#FFFFFF';
+
+            if (confirm < 20) {
+                color = "#ffe8e7";
+            } else if(confirm > 20 && confirm < 50){
+                color = "#F6BDC0";
+            } else if(confirm > 50 && confirm < 300) {
+                color = '#F1959B'
+            } else if(confirm > 300 && confirm < 500) {
+                color = '#F07470'
+            } else if(confirm > 500 && confirm < 5000) {
+                color = '#EA4C46'
+            } else if(confirm > 5000 && confirm < 10000) {
+                color = '#DC1C13'
+            }
+
+            $(".map_city"+pValue.LOC_NUM).attr('fill', color);
+            $('button[data-city="'+city+'"]').find('span[class=name]').html(pValue.LOC_NAME);
+            $('button[data-city="'+city+'"]').find('span[class=num]').html(pValue.CONFIRM);
+
+            if(pValue.BEFORE != null) {
+                var delta = parseInt(pValue.CONFIRM) - parseInt(pValue.BEFORE);
+                delta = (delta > 0) ? '+'+delta : ''+delta;
+                $('button[data-city="'+city+'"]').find('span[class=before]').html('('+delta+')');
+            }
+
+        });
     });
 
 </script>

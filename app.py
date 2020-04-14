@@ -1,10 +1,11 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, url_for
 # from urllib.request import urlretrieve
 import os
 import requests
 import pymysql
 import time
 import datetime
+from codecs import open
 from apscheduler.schedulers.background import BackgroundScheduler
 from bs4 import BeautifulSoup
 
@@ -17,38 +18,42 @@ def index():
 
 @app.route('/getSVG')
 def getSVG():
-    f = open('static/map_main_new.tag', 'r')
+    f = open('static/map_main_new.tag', 'r', encoding='utf8')
     svgHTML = " ".join(f.readlines())
     f.close()
     return svgHTML
 
 @app.route('/getLiveNumber')
 def getLiveNumber():
-    date = requests.args.get('date') #2020-04-11
-    now = datetime.datetime.strftime(date, '%Y-%m-%d')
-    yesterday = str((now - datetime.timedelta(days=1)))[:10]
+    date = request.args.get('date')
+    now = datetime.datetime.strptime(date, '%Y-%m-%d')
+    yesterday = str(now - datetime.timedelta(days=1))[:10]
+    past = str(now - datetime.timedelta(days=2))[:10]
     result = {}
 
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = 'SELECT * FROM status WHERE REGIST_DTM=%s'
+    sql = "SELECT * FROM status WHERE REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['status'] = curs.fetchall()
 
-    sql = 'SELECT * FROM location WHERE REGIST_DTM=%s'
+    sql = "SELECT y.LOC_NAME, y.LOC_NUM, y.CONFIRM, p.CONFIRM AS `BEFORE` FROM location y LEFT JOIN location p ON y.LOC_NUM = p.LOC_NUM AND p.REGIST_DTM=DATE_SUB(y.REGIST_DTM, INTERVAL 1 DAY) WHERE y.REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['location'] = curs.fetchall()
 
     return jsonify(result)
 
 
+
 def downloadSVG():
-    res = requests.get('http://ncov.mohw.go.kr/')
-    soup = BeautifulSoup(res.text, 'html.parser')
-    div = soup.find('div', {'id' : 'main_maplayout'})
+    res = requests.get('http://ncov.mohw.go.kr/static/css/chart_kr.css')
+    res.encoding = None
+    f = open('static/svg.css', 'w', encoding='utf8')
+    f.write(res.text.split('\r\n\r\n')[16].replace('.regional_patient_status_A .rpsa_map .rpsam_graph', '.map-wrapper'))
+    f.close()
 
     buttons = ''
     for i in range(1, 19):
-        buttons += "<button type='button' data-city='map_city{}'><span class='name'></span><span class='num'></span><span class='before'></span></button>".format(i)
+        buttons += '<button type="button" data-city="map_city{}"><span class ="name"></span><span class ="num"></span><span class ="before"></span></button>'.format(i)
 
     res = requests.get('http://ncov.mohw.go.kr/static/image/map/map_main_new.svg')
     soup = BeautifulSoup(res.text, 'html.parser')
@@ -59,10 +64,11 @@ def downloadSVG():
     polygons = svg.find_all('polygon')
     for polygon in polygons:
         polygon['fill'] = '#FFFFFF'
-    f = open('static/map_main_new.tag', 'w')
+    f = open('static/map_main_new.tag', 'w', encoding='utf8')
     f.write(buttons)
     f.write(str(svg))
     f.close()
+
 
 def crawlLocationConfirm():
     res = requests.get('http://ncov.mohw.go.kr/')
@@ -87,6 +93,16 @@ def crawlLocationConfirm():
         curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
     conn.commit()
 
+@app.context_processor
+def override_url_for():
+    return dict(url_for=dated_url_for)
+
+def dated_url_for(endpoint, **values):
+    if endpoint == 'static':
+        if values['filename'].split('.')[-1] == 'css':
+            values['version'] = datetime.datetime.now().strftime("%y%m%d%H%M%S")
+    return url_for(endpoint, **values)
+
 if __name__ == "__main__":
     if 'map_main_new.tag' not in os.listdir('static'):
         downloadSVG()
@@ -106,22 +122,3 @@ if __name__ == "__main__":
         scheduler.shutdown()
         print('Scheduler jiselectric_location removed')
 
-"""
-if __name__ == "__main__":
-    if 'map_main_new.tag' not in os.listdir('static'):
-        downloadSVG()
-        print('SVG Downloaded')
-
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=crawlLocationConfirm, trigger='interval', minutes=1, start_date='{} 20:47:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
-                      id='jiselectric_location')
-    scheduler.start()
-    print('Scheduler jiselectic-location Registered!')
-
-    try:
-        app.run()
-    except:
-        scheduler.remove_job('jiselectric_location')
-        scheduler.shutdown()
-        print('Scheduler jiselectric_location removed')
-"""
