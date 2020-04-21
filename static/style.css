@@ -50,6 +50,15 @@ ol, ul {
     }
 }
 
+#content-right > #map-title {
+    font-size: 22px;
+    margin: 50px;
+}
+
+#content-right > .map-wrapper {
+    margin: auto auto auto 38px;
+}
+
 @media(max-width: 1179px) and (min-width: 0px) {
     #navigation {
         display: none;
@@ -145,24 +154,6 @@ ol, ul {
 .navigation .navigation-menu li{
     display: inline;
     margin: 1em;
-}
-
-.map-title {
-    font-size : 22px;
-    font-weight: 600;
-    color: #000;
-    position: relative;
-    width: 100%;
-    margin: 40px;
-}
-
-.coronaMap {
-    top: 50px;
-}
-
-#corona-map {
-    margin: 70px;
-    position: relative;
 }
 
 .content-left {
@@ -431,4 +422,110 @@ ol, ul {
   height: 8px;
   border-radius: 50%;
   background: white;
+}
+
+#terms-container {
+    margin-top: 2.5%;
+    margin-left: 13%;
+    width: 70%;
+    height: 100%;
+}
+
+#terms-container > #terms-title {
+    font-size:  30px;
+    font-weight: bold;
+}
+
+#term-container > #notes {
+    margin: 5%;
+}
+
+#note-one {
+    margin-top: 3%;
+}
+
+#note-one > #one-number {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 2%;
+    color: #009CDE;
+}
+
+#note-one > #one-notice {
+    font-size: 20px;
+    line-height: 1.5em;
+}
+
+#note-two {
+    margin-top: 3%;
+}
+
+#note-two > #two-number {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 2%;
+    color: #009CDE;
+}
+
+#note-two > #two-notice {
+    font-size: 20px;
+    line-height: 1.5em;
+}
+
+#terms-btn {
+    margin-left: 78%;
+    margin-top: 10%;
+    line-height: 56px;
+    color: #fff;
+    background: #0057B8;
+    border-radius: 999vw;
+    font-size: 18px;
+    display: block;
+    border: 0;
+    width: 224px;
+    cursor: pointer;
+}
+
+#user-container {
+    margin-top: 2.5%;
+    margin-left: 30%;
+    width: 70%;
+    height: 100%;
+}
+
+#user-input > form > input[type='text'], input[type='tel'], select {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#user-input > form > input[type='submit'] {
+  width: 50%;
+  background-color: #4c638f;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#user-input > form > div {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+#user-input > form > h2 {
+  font-size: 25px;
+}
+
+#user-input > form > h3 {
+  font-size: 12px;
+  width: 50%;
+  margin-top: 0.5em;
 }

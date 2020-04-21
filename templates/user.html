@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title> Self-Assessment </title>
+</head>
+<body>
+    {% include 'format.html' %}
+    <div id="user-container">
+        <div id="user-input">
+            <form action="/user" method="post" id="user-form">
+                <h2> Respondent Information </h2>
+                <h3> * Your personal information will be kept strictly confidential and will be utilized to assist you on COVID-19 hotline. </h3>
+                <input type="text" name="lastName" id="lastName" placeholder="Last Name" required>
+                <input type="text" name="firstName" id="firstName" placeholder="First Name" required>
+                <input type="tel" name='phone' id="phone" placeholder="Phone Number (Digits Only)" pattern="[0-9]{3}[0-9]{4}[0-9]{4}" required>
+                <select name="affiliation" id="affiliation" required>
+                    <option value="U.S. Military"> U.S. Military </option>
+                    <option value="ROK Military"> ROK Military </option>
+                    <option value="U.S. Civilian"> U.S. Civilian </option>
+                    <option value="ROK Civilian"> ROK Civilian </option>
+                </select>
+                <select name="area" id="area" required>
+                    <option value="Area I"> Area I </option>
+                    <option value="Area II"> Area II </option>
+                    <option value="Area III"> Area III </option>
+                    <option value="Area IV"> Area IV </option>
+                </select>
+                <input type="text" name="unit" id="unit" placeholder="Unit" required>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+</body>
+</html>

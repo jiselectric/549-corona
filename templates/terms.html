@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title> Self-Assessment </title>
+</head>
+<body>
+    {% include 'format.html' %}
+    <div id="terms-container">
+        <div id="terms-title">
+            Before You Begin
+        </div>
+        <div id="notes">
+            <div id="note-one">
+                <span id="one-number"> 1. </span>
+                <span id="one-notice"> This tool is not meant to take the place of consultation with your health care provider or to diagnose or treat conditions.
+                    If you're in an emergency medical situation, call 911 or your local emergency number.</span>
+            </div>
+            <div id="note-two">
+                <span id="two-number"> 2. </span>
+                <span id="two-notice"> Information about COVID-19 is constantly changing. And the level of COVID-19 activity varies by community,
+                    as does the availability of testing. For current updates on COVID-19 and details on testing and other health measures in your residence,
+                    check with your local public health agency and visit the official USFK COVID-19 Information website. </span>
+            </div>
+        </div>
+        <form action="/assessment" method="post">
+            <input type="submit" id="terms-btn" value="Begin Assessment">
+        </form>
+    </div>
+</body>
+<script>
+    /**
+    document.getElementById("terms-btn").onclick = function () {
+        location.href = "/user";
+    };
+    **/
+</script>
+</html>
