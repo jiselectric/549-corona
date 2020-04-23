@@ -166,7 +166,7 @@ def user():
             result = curs.fetchall()
 
     session['u_sn'] = u_sn
-    print(session['u_sn'])
+    #print(session['u_sn'])
     sql = 'INSERT INTO users (U_SN,LAST_NAME, FIRST_NAME, AREA, UNIT, AFFIL, PHONE_NUM, REGIST_DTM) VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())'
     curs.execute(sql, (u_sn, lastName, firstName, area, unit, affiliation, phone))
     conn.commit()
@@ -175,46 +175,45 @@ def user():
 
 @app.route('/startAssessment', methods=['GET', 'POST'])
 def startAssessment():
-    ans = request.args.get('answer')
-
+    u_sn = session['u_sn']
+    answer = request.args.get('answer')
     if 'u_sn' not in session:
         return redirect('/assessment')
     else:
-        u_sn = session['u_sn']
-
-        if ans is None:
+        if answer is None:
             curs = conn.cursor(pymysql.cursors.DictCursor)
             sql = "SELECT * FROM question WHERE Q_SN=%s"
             curs.execute(sql, (1))
             question = curs.fetchone()
 
             return render_template('assessment.html', q_sn=1, q_text=question['Q_TEXT'])
+
         else:
             q_sn = request.args.get('q_sn')
             q_sn = int(q_sn)
-
             curs = conn.cursor(pymysql.cursors.DictCursor)
             sql = "SELECT * FROM answer WHERE U_SN=%s AND Q_SN=%s"
             curs.execute(sql, (u_sn, q_sn))
             result = curs.fetchall()
 
             if len(result) > 0:
-                sql = "UPDATE * FROM answer WHERE U_SN=%s AND Q_SN=%s"
+                sql = 'UPDATE * FROM answer WHERE U_SN=%s AND Q_SN=%s'
                 curs.execute(sql, (u_sn, q_sn))
             else:
                 sql = "INSERT INTO answer(U_SN, Q_SN, A_ANS) VALUES(%s, %s, %s)"
-                curs.execute(sql, (u_sn, q_sn, ans))
+                curs.execute(sql, (u_sn, q_sn, answer))
             conn.commit()
 
             next_q = q_sn + 1
-            print(next_q)
-            sql = "SELECT * FROM question WHERE q_sn=%s"
-            curs.execute(sql, next_q)
+            sql = "SELECT * FROM question WHERE Q_SN = %s"
+            curs.execute(sql, (next_q))
             question = curs.fetchone()
 
             if question is None:
-                return redirect('/assessmentFinish')
-            return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'])
+                #print('none')
+                return redirect('assessmentFinish')
+            else:
+                return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'])
 
 @app.route('/assessmentFinish', methods=['POST', 'GET'])
 def assessmentFinish():
@@ -222,7 +221,9 @@ def assessmentFinish():
         return redirect('/assessment')
     else:
         u_sn = session["u_sn"]
+        print(u_sn)
         del session["u_sn"]
+        print(u_sn)
         return render_template('assessmentFinish.html', u_sn=u_sn)
 
 @app.context_processor
