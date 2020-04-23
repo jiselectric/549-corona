@@ -7,7 +7,7 @@
 </head>
 <body>
     {% include 'format.html' %}
-    <h1><span>{{q_sn}}</span>{{q_text}}</h1>
+    <h1><span>{{q_num}}</span>{{q_text}}</h1>
     <form action="/startAssessment" method="get">
         <label for="ans_yes">Yes</label>
         <input type="radio" id="ans_yes" name="answer" value="1"/>

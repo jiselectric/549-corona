@@ -186,7 +186,7 @@ def startAssessment():
             curs.execute(sql, (1))
             question = curs.fetchone()
 
-            return render_template('assessment.html', q_sn=1, q_text=question['Q_TEXT'])
+            return render_template('assessment.html', q_sn=1, q_text=question['Q_TEXT'], q_num=1)
 
         else:
             q_sn = request.args.get('q_sn')
@@ -197,23 +197,35 @@ def startAssessment():
             result = curs.fetchall()
 
             if len(result) > 0:
-                sql = 'UPDATE * FROM answer WHERE U_SN=%s AND Q_SN=%s'
-                curs.execute(sql, (u_sn, q_sn))
+                sql = 'UPDATE answer SET A_ANS=%s WHERE U_SN=%s AND Q_SN=%s'
+                curs.execute(sql, (answer, u_sn, q_sn))
             else:
                 sql = "INSERT INTO answer(U_SN, Q_SN, A_ANS) VALUES(%s, %s, %s)"
                 curs.execute(sql, (u_sn, q_sn, answer))
             conn.commit()
 
-            next_q = q_sn + 1
-            sql = "SELECT * FROM question WHERE Q_SN = %s"
-            curs.execute(sql, (next_q))
-            question = curs.fetchone()
+            answer = int(answer)
+
+            if q_sn % 2 != 0 and answer == 1:
+                next_q = q_sn + 1
+                sql = "SELECT * FROM question WHERE Q_SN = %s"
+                curs.execute(sql, (next_q))
+                question = curs.fetchone()
+            elif q_sn % 2 != 0 and answer == 0:
+                next_q = q_sn + 2
+                sql = "SELECT * FROM question WHERE Q_SN=%s"
+                curs.execute(sql, (next_q))
+                question = curs.fetchone()
+            elif q_sn % 2 == 0:
+                next_q = q_sn + 1
+                sql = "SELECT * FROM question WHERE Q_SN=%s"
+                curs.execute(sql, (next_q))
+                question = curs.fetchone()
 
             if question is None:
-                #print('none')
                 return redirect('assessmentFinish')
             else:
-                return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'])
+                return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'], q_num=question['Q_NUM'])
 
 @app.route('/assessmentFinish', methods=['POST', 'GET'])
 def assessmentFinish():
