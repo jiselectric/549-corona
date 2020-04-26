@@ -165,28 +165,33 @@ def user():
             curs.execute(sql, u_sn)
             result = curs.fetchall()
 
-    session['u_sn'] = u_sn
-    #print(session['u_sn'])
-    sql = 'INSERT INTO users (U_SN,LAST_NAME, FIRST_NAME, AREA, UNIT, AFFIL, PHONE_NUM, REGIST_DTM) VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())'
-    curs.execute(sql, (u_sn, lastName, firstName, area, unit, affiliation, phone))
-    conn.commit()
+        session['u_sn'] = u_sn
+        #print(session['u_sn'])
+        sql = 'INSERT INTO users (U_SN,LAST_NAME, FIRST_NAME, AREA, UNIT, AFFIL, PHONE_NUM, REGIST_DTM) VALUES (%s, %s, %s, %s, %s, %s, %s, NOW())'
+        curs.execute(sql, (u_sn, lastName, firstName, area, unit, affiliation, phone))
+        conn.commit()
 
     return redirect('/startAssessment')
 
 @app.route('/startAssessment', methods=['GET', 'POST'])
 def startAssessment():
-    u_sn = session['u_sn']
-    answer = request.args.get('answer')
+
+    answers = request.args.getlist('answer')
     if 'u_sn' not in session:
         return redirect('/assessment')
     else:
-        if answer is None:
+        u_sn = session['u_sn']
+        if len(answers) == 0:
             curs = conn.cursor(pymysql.cursors.DictCursor)
             sql = "SELECT * FROM question WHERE Q_SN=%s"
             curs.execute(sql, (1))
             question = curs.fetchone()
 
-            return render_template('assessment.html', q_sn=1, q_text=question['Q_TEXT'], q_num=1)
+            sql = "SELECT * FROM example WHERE Q_SN=%s"
+            curs.execute(sql, (1))
+            examples = curs.fetchall()
+
+            return render_template('assessment.html', q_sn=1, q_text=question['Q_TEXT'], q_type=question['Q_TYPE'], q_num=1, examples=examples)
 
         else:
             q_sn = request.args.get('q_sn')
@@ -197,35 +202,41 @@ def startAssessment():
             result = curs.fetchall()
 
             if len(result) > 0:
-                sql = 'UPDATE answer SET A_ANS=%s WHERE U_SN=%s AND Q_SN=%s'
-                curs.execute(sql, (answer, u_sn, q_sn))
-            else:
+                sql = 'DELETE FROM answer WHERE U_SN=%s AND Q_SN=%s'
+                curs.execute(sql, (u_sn, q_sn))
+
+            for answer in answers:
                 sql = "INSERT INTO answer(U_SN, Q_SN, A_ANS) VALUES(%s, %s, %s)"
                 curs.execute(sql, (u_sn, q_sn, answer))
             conn.commit()
 
-            answer = int(answer)
+            answer = answers[0]
+            sql = "SELECT * FROM question WHERE Q_SN=%s"
+            curs.execute(sql, (q_sn))
+            question = curs.fetchone()
 
-            if q_sn % 2 != 0 and answer == 1:
+            q_type = question['Q_TYPE']
+            if q_type == 2:
                 next_q = q_sn + 1
-                sql = "SELECT * FROM question WHERE Q_SN = %s"
-                curs.execute(sql, (next_q))
-                question = curs.fetchone()
-            elif q_sn % 2 != 0 and answer == 0:
-                next_q = q_sn + 2
-                sql = "SELECT * FROM question WHERE Q_SN=%s"
-                curs.execute(sql, (next_q))
-                question = curs.fetchone()
-            elif q_sn % 2 == 0:
-                next_q = q_sn + 1
-                sql = "SELECT * FROM question WHERE Q_SN=%s"
-                curs.execute(sql, (next_q))
-                question = curs.fetchone()
+            else:
+                sql = "SELECT * FROM example WHERE Q_SN=%s AND A_ANS=%s"
+                curs.execute(sql, (q_sn, answer))
+                ex = curs.fetchone()
+                next_q = ex['NEXT_Q_SN']
+
+
+            sql = "SELECT * FROM question WHERE Q_SN=%s"
+            curs.execute(sql, (next_q))
+            question = curs.fetchone()
+
+            sql = "SELECT * FROM example WHERE Q_SN=%s"
+            curs.execute(sql, (next_q))
+            examples = curs.fetchall()
 
             if question is None:
                 return redirect('assessmentFinish')
             else:
-                return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'], q_num=question['Q_NUM'])
+                return render_template('assessment.html', q_sn=next_q, q_text=question['Q_TEXT'], q_type=question['Q_TYPE'], q_num=question['Q_NUM'], examples=examples)
 
 @app.route('/assessmentFinish', methods=['POST', 'GET'])
 def assessmentFinish():

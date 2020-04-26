@@ -9,10 +9,18 @@
     {% include 'format.html' %}
     <h1><span>{{q_num}}</span>{{q_text}}</h1>
     <form action="/startAssessment" method="get">
-        <label for="ans_yes">Yes</label>
-        <input type="radio" id="ans_yes" name="answer" value="1"/>
-        <label for="ans_no">No</label>
-        <input type="radio" id="ans_no" name="answer" value="0"/>
+        {% for ex in examples %}
+            {% if q_type == 0 %}
+        <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
+        <input type="radio" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
+            {% elif q_type == 1 %}
+        <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
+        <input type="checkbox" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
+            {% else %}
+        <input type="text" name="answer" value="" placeholder="{{ex['EX_TEXT']}}"/>
+            {% endif %}
+
+        {% endfor %}
         <input type="hidden" value="{{q_sn}}" name="q_sn"/>
         <input type="submit" value="계속하기"/>
     </form>
