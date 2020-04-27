@@ -14,8 +14,8 @@
         <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
         <input type="radio" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
             {% elif q_type == 1 %}
-        <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
         <input type="checkbox" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
+        <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
             {% else %}
         <input type="text" name="answer" value="" placeholder="{{ex['EX_TEXT']}}"/>
             {% endif %}

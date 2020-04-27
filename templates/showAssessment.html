@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+<head>
+    <meta charset="UTF-8">
+    <title> Self-Assessment </title>
+</head>
+<body>
+    <style>
+        .middle{
+            text-align:center!important;
+        }
+        .left{
+            text-align:left!important;
+        }
+    </style>
+    <input type="number" id="u_sn" placeholder="USER_SN"/>
+    <input type="button" id="submit" value="조회하기"/>
+    <table id="ans_table">
+        <colgroup>
+            <col width="50"/>
+            <col width="500"/>
+            <col width="50"/>
+            <col width="50"/>
+        </colgroup>
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th class="left">질문 내용</th>
+                <th>YES</th>
+                <th>NO</th>
+            </tr>
+        </thead>
+        <tbody role="ans">
+
+        </tbody>
+    </table>
+    <script>
+        $('#submit').on('click', function(e){
+            var u_sn = $("#u_sn").val();
+            if(u_sn != ''){
+                $.ajax({
+                    url:'/loadAssessment',
+                    data: {'u_sn' : u_sn},
+                    method: 'GET'
+                }).done(function(result){
+                    var html = '';
+                    $.each(result, function(pIndex, pValue){
+                        html += '<tr>';
+                        html += '    <td class="middle">'+pValue.Q_SN+'</td>';
+                        html += '    <td>'+pValue.Q_TEXT+'</td>';
+                        if(pValue.A_ANS == '0'){
+                        html += '    <td class="middle"></td>';
+                        html += '    <td class="middle">V</td>';
+                        }
+                        else{
+                        html += '    <td class="middle">V</td>';
+                        html += '    <td class="middle"></td>';
+                        }
+                        html += '</tr>';
+                    });
+                    $("#ans_table").find("tbody[role=ans]").html(html);
+                });
+
+            }
+        });
+
+
+    </script>
+</body>
+</html>

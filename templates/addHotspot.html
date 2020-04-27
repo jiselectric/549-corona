@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+<body>
+    <table width="60%" style="border:1px solid black;">
+        <colgroup>
+            <col width="200">
+            <col width="200">
+            <col width="200">
+        </colgroup>
+        <thead>
+            <tr>
+                <td>성별</td>
+                <td>나이대</td>
+                <td>신분</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    <label for="w">여자</label><input type="radio" name="sex" value="1" id="w"/>
+                    <label for="m">남자</label><input type="radio" name="sex" value="0" id="m"/>
+                </td>
+                <td>
+                    <input type="text" name="age" placeholder="나이대를 입력하세요"/>
+                </td>
+                <td>
+                    <input type="text" name="affiliation" placeholder="신분을 입력하세요"/>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="text-align:right;">
+                    <input type="button" value="시작" id="start"/>
+
+                </td>
+            </tr>
+
+        </tfoot>
+    </table>
+
+    <form action="/saveHotspot" method="post">
+    <table width="100%" style="display:none;border:1px solid black;" id="formData">
+        <colgroup>
+            <col width="200">
+            <col width="800">
+        </colgroup>
+        <thead>
+            <tr>
+                <th colspan="2">
+                    저장할때는 save, 추가할때는 add
+                    <input type="hidden" id="p_sn" name="p_sn" value=""/>
+                </th>
+            </tr>
+            <tr>
+                <th>시간</th>
+                <th>설명</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+
+                <td><input type="text" name="time[]" placeholder="00:00:00"/> </td>
+                <td><input type="text" name="desc[]" placeholder="설명을 입력하세요"/> </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <input type="button" value="add" id="add"/>
+                </td>
+                <td>
+                    <input type="submit" value="save" id="save"/>
+                </td>
+            </tr>
+
+        </tfoot>
+    </table>
+    </form>
+
+    <script>
+        $("#start").on('click', function(){
+            var params = '';
+            var sex = $("input[name='sex']:checked").val();
+            var age = $("input[name='age']").val();
+            var affiliation = $("input[name='affiliation']").val();
+            params += '&sex='+sex;
+            params += '&age='+age;
+            params += '&affiliation='+affiliation;
+            $.ajax({
+                url : '/startHotspot',
+                data : params,
+                method: 'GET'
+            }).done(function(result){
+                var p_sn = result['P_SN'];
+                $("#formData").show();
+                $("#formData").find("#p_sn").val(p_sn);
+                $("input[name='age']").attr('disabled', true);
+                $("input[name='affiliation']").attr('disabled', true);
+                $("input[name='sex']").attr('disabled', true);
+            });
+        });
+
+        $("#add").on('click', function(){
+            var html = '';
+            html += '<tr>';
+            html += '    <td><input type="text" name="time[]" placeholder="00:00:00"/> </td>';
+            html += '    <td><input type="text" name="desc[]" placeholder="설명을 입력하세요"/> </td>';
+            html += '</tr>';
+            $("#formData").find("tbody").append(html);
+        });
+
+    </script>
+</body>
+
+</html>
+

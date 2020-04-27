@@ -249,6 +249,54 @@ def assessmentFinish():
         print(u_sn)
         return render_template('assessmentFinish.html', u_sn=u_sn)
 
+@app.route('/showAssessment', methods=['POST', 'GET'])
+def showAssessment():
+    return render_template('showAssessment.html')
+
+@app.route('/loadAssessment')
+def loadAssessment():
+    u_sn = request.args.get('u_sn')
+
+    curs = conn.cursor(pymysql.cursors.DictCursor)
+    sql = "SELECT a.Q_SN, a.A_ANS, q.Q_TEXT FROM answer a LEFT JOIN question q ON a.Q_SN=q.Q_SN WHERE U_SN=%s ORDER BY Q_SN"
+    curs.execute(sql, (u_sn))
+    result = curs.fetchall()
+    return jsonify(result)
+
+@app.route('/addHotspot')
+def addHotspot():
+    return render_template('addHotspot.html')
+
+@app.route('/startHotspot')
+def startHotspot():
+    sex = request.args.get('sex')
+    age = request.args.get('age')
+    affiliation = request.args.get('affiliation')
+    print(sex)
+    print(age)
+    print(affiliation)
+
+    curs = conn.cursor()
+    sql = "INSERT INTO positive(P_SEX, P_AGE, P_AFF) VALUES(%s, %s, %s)"
+    curs.execute(sql, (sex, age, affiliation))
+    iid = curs.lastrowid
+    conn.commit()
+    print(iid)
+    return jsonify({"P_SN": iid})
+
+@app.route('/saveHotspot', methods=['POST'])
+def saveHotspot():
+    curs = conn.cursor()
+    p_sn = request.form.get('p_sn')
+    time = request.form.getlist('time[]')
+    desc = request.form.getlist('desc[]')
+    for t, d in zip(time, desc):
+        sql = "INSERT INTO hotspots VALUES (%s, %s, %s)"
+        curs.execute(sql, (p_sn, t, d))
+    conn.commit()
+    return redirect('/addHotspot')
+
+
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)
