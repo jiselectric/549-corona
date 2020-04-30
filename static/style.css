@@ -30,6 +30,9 @@ ol, ul {
     list-style: none;
 }
 
+#map-title {
+    font-weight: bold;
+}
 /* top-header */
 .top-header {
     height: 75px;
@@ -120,6 +123,12 @@ ol, ul {
         color: #000000;
         display: block;
         transition: 0.3s;
+    }
+    #content-right > .map-wrapper {
+        margin-left: 20%;
+    }
+    #content-right > #map-title {
+        margin-top: 1%;
     }
 }
 
