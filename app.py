@@ -9,6 +9,7 @@ import datetime
 from codecs import open
 from apscheduler.schedulers.background import BackgroundScheduler
 from bs4 import BeautifulSoup
+from pprint import pprint
 
 app = Flask(__name__)
 app.secret_key = 'jiselectric'
@@ -298,42 +299,6 @@ def saveHotspot():
     conn.commit()
     return redirect('/addHotspot')
 
-"""
-@app.route('/hotspots')
-def hotspots():
-    return render_template('hotspots.html')
-
-@app.route('/getHotspot')
-def getHotspot():
-    curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT p.P_SN, h.H_TIME, h.H_DESC, p.P_SEX, p.P_AGE, p.P_AFF FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
-    curs.execute(sql)
-    result = curs.fetchall()
-    new_result = {}
-    for r in result:
-        p_sn = r['P_SN']
-        h_date = r['H_TIME'].strftime("%Y-%m-%d")
-        h_time = r['H_TIME'].strftime("%H:%M:%S")
-        h_desc = r['H_DESC']
-        p_sex = r['P_SEX']
-        print(p_sn)
-        print(p_sex)
-
-        if p_sn not in new_result:
-            result_by_date = {}
-            result_by_date[h_date] = [[h_time, h_desc]]
-            new_result[p_sn] = {}
-            new_result[p_sn]["data"] = {"p_sex": r['P_SEX'], "p_age": r['P_AGE'], "p_aff": r['P_AFF']}
-            new_result[p_sn]["hotspots"] = result_by_date
-        else:
-            if h_date in new_result[p_sn]["hotspots"]:
-                new_result[p_sn]["hotspots"][h_date].append([h_time, h_desc])
-            else:
-                new_result[p_sn]["hotspots"][h_date] = [[h_time, h_desc]]
-
-    return jsonify(new_result)
-"""
-
 @app.route('/hotspots')
 def showHotspot():
     return render_template('hotspots.html')
@@ -341,26 +306,31 @@ def showHotspot():
 @app.route('/getHotspot')
 def getHotspot():
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT p.P_SN, h.H_TIME, h.H_DESC, p.P_SEX, p.P_AGE, p.P_AFF FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN WHERE 1"
+    sql = "SELECT p.P_SN, DATE(H_TIME) AS H_DATE, TIME(H_TIME) AS H_TM, H_DESC, IF(P_SEX=0, 'Male', 'Female') AS P_SEX, (SELECT AFF_NM FROM affiliation WHERE AFF_SN=p.P_AFF) AS AFF_NM FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
     curs.execute(sql)
     result = curs.fetchall()
-    new_result = {}
-    for r in result:
-        p_sn = r['P_SN']
-        h_date = r['H_TIME'].strftime("%Y-%m-%d")
-        h_time = r['H_TIME'].strftime("%H:%M:%S")
+    pprint(result)
 
+    new_result = {}
+
+    for data in result:
+        p_sn = data['P_SN']
+        aff_nm = data['AFF_NM']
+        h_date = data['H_DATE'].strftime("%Y-%m-%d")
+        h_desc = data['H_DESC']
+        h_tm = str(data['H_TM'])
+        p_sex = data['P_SEX']
         if p_sn not in new_result:
-            result_by_date = {}
-            result_by_date[h_date] = [[h_time, h_desc]]
-            new_result[p_sn] = {}
-            new_result[p_sn]["data"] = {"p_sex" : r['P_SEX'], "p_age" : r['P_AGE'], "p_aff" : r['P_AFF']}
-            new_result[p_sn]["hotspots"] = result_by_date
-        else:
-            if h_date in new_result[p_sn]["hotspots"]:
-                new_result[p_sn]["hotspots"][h_date].append([h_time, h_desc])
-            else:
-                new_result[p_sn]["hotspots"][h_date] = [[h_time, h_desc]]
+            new_result[p_sn] = {"aff_nm" : aff_nm, "p_sex" : p_sex, "dates" : {}}
+        dates = new_result[p_sn]["dates"]
+
+        if h_date not in dates:
+            dates[h_date] = {}
+
+        times = dates[h_date]
+        if h_tm not in times:
+            times[h_tm] = h_desc
+
     return jsonify(new_result)
 
 @app.route('/contact')

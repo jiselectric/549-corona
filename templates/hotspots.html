@@ -8,86 +8,7 @@
 <body>
     {% include 'format.html' %}
 
-    <div class="positive" data-sn="1">
-        <div class="positive-info">
-            <span class="positive-title-num">
-            Positive Case #1
-            </span>
-            <div class="positive-id">
-                <span> Sex : Male | </span>
-                <span> Age Group : 20 | </span>
-                <span> Affiliation : U.S. Military </span>
-            </div>
-        </div>
-        <div class="hotspots" style="display:none;">
-            <div class="hotspots-day">
-                <span class="hotspots-date"> 2020-04-28 </span>
-                <div class="hotspots-desc">
-                    <div>
-                        <span> 12:00:00 </span>
-                        <span> Home </span>
-                    </div>
-                    <div>
-                        <span> 13:00:00 </span>
-                        <span> Gym </span>
-                    </div>
-                </div>
-            </div>
-            <div class="hotspots-day">
-                <span class="hotspots-date"> 2020-04-29 </span>
-                <div class="hotspots-desc">
-                    <div>
-                        <span> 09:00:00 </span>
-                        <span> Starbucks </span>
-                    </div>
-                    <div>
-                        <span> 13:00:00 </span>
-                        <span> Gym </span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="positive" data-sn="1">
-        <div class="positive-info">
-            <span class="positive-title-num">
-            Positive Case #2
-            </span>
-            <div class="positive-id">
-                <span> Sex : Female | </span>
-                <span> Age Group : 20 | </span>
-                <span> Affiliation : ROK Military </span>
-            </div>
-        </div>
-        <div class="hotspots" style="display:none;">
-            <div class="hotspots-day">
-                <span class="hotspots-date"> 2020-04-28 </span>
-                <div class="hotspots-desc">
-                    <div>
-                        <span> 12:00:00 </span>
-                        <span> Home </span>
-                    </div>
-                    <div>
-                        <span> 13:00:00 </span>
-                        <span> Gym </span>
-                    </div>
-                </div>
-            </div>
-            <div class="hotspots-day">
-                <span class="hotspots-date"> 2020-04-29 </span>
-                <div class="hotspots-desc">
-                    <div>
-                        <span> 09:00:00 </span>
-                        <span> Starbucks </span>
-                    </div>
-                    <div>
-                        <span> 13:00:00 </span>
-                        <span> Gym </span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div id="hotspot-list">
     </div>
 
 </body>
@@ -95,6 +16,46 @@
     $(document).on('click', '.positive-info', function(){
         $(this).parent().find(".hotspots").toggle();
     });
+
+         $.ajax({
+            url: '/getHotspot',
+            methods : 'GET'
+        }).done(function(data){
+            let html = '';
+
+            $.each(data, function(p_sn, p_data){
+                let dates = data.dates;
+                html += '<div class="positive" data-sn="'+p_sn+'">';
+                html += '    <div class="positive-info">';
+                html += '        <span class="positive-title-num">';
+                html += '        Positive Case #'+p_sn+'';
+                html += '        </span>';
+                html += '        <div class="positive-id">';
+                html += '            <span> Sex : '+data.p_sex+' | </span>';
+                html += '            <span> Age Group : '+data.p_sex+' | </span>';
+                html += '            <span> Affiliation : '+data.aff_nm+' </span>';
+                html += '        </div>';
+                html += '    </div>';
+                html += '    <div class="hotspots" style="display:none;">';
+                $.each(dates, function(date, times){
+                    html += '        <div class="hotspots-day">';
+                    html += '            <span class="hotspots-date"> '+date+' </span>';
+                    html += '            <div class="hotspots-desc">';
+                    $.each(times, function(time, desc){
+                        html += '                <div>';
+                        html += '                    <span> '+time+' </span>';
+                        html += '                    <span> '+desc+' </span>';
+                        html += '                </div>';
+                    });
+                html += '            </div>';
+                html += '        </div>';
+                });
+                html += '    </div>';
+                html += '</div>';
+            });
+
+            $("#hotspot-list").html(html);
+        });
 
 </script>
 </html>
