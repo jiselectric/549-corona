@@ -529,3 +529,87 @@ ol, ul {
   width: 50%;
   margin-top: 0.5em;
 }
+
+#assessment-body {
+    margin-top: 2.5%;
+    margin-left: 13%;
+    width: 70%;
+    height: 100%;
+}
+
+#q-num {
+    display: block;
+    font-size: 28px;
+    margin-bottom: 5%;
+    color: #009CDE;
+}
+
+#q-text {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 10%;
+}
+
+#assessment-next {
+    margin-left: 78%;
+    margin-top: 10%;
+    line-height: 56px;
+    color: #fff;
+    background: #0057B8;
+    border-radius: 999vw;
+    font-size: 18px;
+    display: block;
+    border: 0;
+    width: 224px;
+    cursor: pointer;
+}
+
+#assessment-type {
+    width: 500px;
+    padding: 12px 20px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.positive {
+    margin-top: 2.5%;
+    margin-left: 13%;
+    width: 70%;
+    height: 100%;
+}
+
+.positive > .positive-info {
+    background: #d3d3d3;
+    padding: 3%;
+}
+
+.positive .positive-title-num {
+    font-size: 28px;
+    color: #1B3C96;
+}
+
+.positive .positive-id {
+    font-size: 20px;
+    margin-top: 1%;
+}
+
+.positive .hotspots {
+    background: #eaeaea;
+    padding: 3%;
+}
+
+.positive .hotspots-date {
+    font-size: 22px;
+    margin-bottom: 2%;
+}
+
+.positive .hotspots-desc {
+    line-height: 2em;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-left: 3%;
+    font-size: 18px;
+}

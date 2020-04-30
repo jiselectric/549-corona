@@ -10,59 +10,107 @@
         </colgroup>
         <thead>
             <tr>
-                <td>성별</td>
-                <td>나이대</td>
-                <td>신분</td>
+                <td> Sex </td>
+                <td> Age Group </td>
+                <td> Affiliation </td>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>
+                    <select id="sex" required>
+                        <option value="1" id="w" name="sex"> Female </option>
+                        <option value="0" id="m" name="sex"> Male </option>
+                    </select>
+                    <!--
                     <label for="w">여자</label><input type="radio" name="sex" value="1" id="w"/>
                     <label for="m">남자</label><input type="radio" name="sex" value="0" id="m"/>
+                    -->
                 </td>
                 <td>
-                    <input type="text" name="age" placeholder="나이대를 입력하세요"/>
+                    <input type="text" name="age" placeholder="Age Group (ex- 30)" required>
                 </td>
                 <td>
+                    <select id="affiliation" required>
+                        {%
+                            for affiliation in aff_list
+                        %}
+                        <option name="affiliation" value="{{affiliation[0]}}"> {{affiliation[1]}}  </option>
+                        {%
+                            endfor
+                        %}
+                    </select>
+                    <!--
                     <input type="text" name="affiliation" placeholder="신분을 입력하세요"/>
+                    -->
                 </td>
             </tr>
         </tbody>
         <tfoot>
             <tr>
                 <td colspan="3" style="text-align:right;">
-                    <input type="button" value="시작" id="start"/>
-
+                    <input type="button" value="Submit" id="start"/>
                 </td>
             </tr>
 
         </tfoot>
     </table>
 
+    <!--
+    <form action="/saveHotspot" method="post">
+        <table width="100%" style="display:none;border:1px solid black;" id="formDate">
+            <colgroup>
+                <col width="400">
+            </colgroup>
+            <thead>
+                <tr>
+                    <td> Date </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <input type="date" name="p-date" id="p-date" placeholder="Date (YY-MM-DD)">
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        <input type="button" value="add-data" id="add-data">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    -->
+
+
     <form action="/saveHotspot" method="post">
     <table width="100%" style="display:none;border:1px solid black;" id="formData">
         <colgroup>
-            <col width="200">
-            <col width="800">
+            <col width="100">
+            <col width="100">
+            <col width="100">
         </colgroup>
         <thead>
             <tr>
-                <th colspan="2">
-                    저장할때는 save, 추가할때는 add
+                <th colspan="1">
+                    Click "Save" to Submit, Click "Add" to Add More Timeline
                     <input type="hidden" id="p_sn" name="p_sn" value=""/>
                 </th>
             </tr>
             <tr>
-                <th>시간</th>
-                <th>설명</th>
+                <th> Date </th>
+                <th> Time </th>
+                <th> Description </th>
             </tr>
         </thead>
         <tbody>
             <tr>
-
-                <td><input type="text" name="time[]" placeholder="00:00:00"/> </td>
-                <td><input type="text" name="desc[]" placeholder="설명을 입력하세요"/> </td>
+                <!-- <td><input type="text" name="date[]" placeholder="YY-MM-DD"/> </td> -->
+                <td><input type="text" name="time[]" placeholder="YY-MM-DD 00:00:00"/> </td>
+                <td><input type="text" name="desc[]" placeholder="Description (ex - Grocery at Commissary)"/> </td>
             </tr>
         </tbody>
         <tfoot>
@@ -82,9 +130,9 @@
     <script>
         $("#start").on('click', function(){
             var params = '';
-            var sex = $("input[name='sex']:checked").val();
+            var sex = $("#sex").val();
             var age = $("input[name='age']").val();
-            var affiliation = $("input[name='affiliation']").val();
+            var affiliation = $("#affiliation").val();
             params += '&sex='+sex;
             params += '&age='+age;
             params += '&affiliation='+affiliation;
@@ -105,6 +153,7 @@
         $("#add").on('click', function(){
             var html = '';
             html += '<tr>';
+            html += '    <td><input type="text" name="date[]" placeholder="YY-MM-DD"/> </td>';
             html += '    <td><input type="text" name="time[]" placeholder="00:00:00"/> </td>';
             html += '    <td><input type="text" name="desc[]" placeholder="설명을 입력하세요"/> </td>';
             html += '</tr>';
@@ -115,4 +164,3 @@
 </body>
 
 </html>
-

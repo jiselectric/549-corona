@@ -265,16 +265,17 @@ def loadAssessment():
 
 @app.route('/addHotspot')
 def addHotspot():
-    return render_template('addHotspot.html')
+    curs = conn.cursor()
+    curs.execute("SELECT * FROM affiliation")
+    aff_list = curs.fetchall()
 
-@app.route('/startHotspot')
+    return render_template('addHotspot.html', aff_list=aff_list)
+
+@app.route('/startHotspot', methods=['GET', 'POST'])
 def startHotspot():
     sex = request.args.get('sex')
     age = request.args.get('age')
     affiliation = request.args.get('affiliation')
-    print(sex)
-    print(age)
-    print(affiliation)
 
     curs = conn.cursor()
     sql = "INSERT INTO positive(P_SEX, P_AGE, P_AFF) VALUES(%s, %s, %s)"
@@ -289,6 +290,7 @@ def saveHotspot():
     curs = conn.cursor()
     p_sn = request.form.get('p_sn')
     time = request.form.getlist('time[]')
+
     desc = request.form.getlist('desc[]')
     for t, d in zip(time, desc):
         sql = "INSERT INTO hotspots VALUES (%s, %s, %s)"
@@ -296,6 +298,74 @@ def saveHotspot():
     conn.commit()
     return redirect('/addHotspot')
 
+"""
+@app.route('/hotspots')
+def hotspots():
+    return render_template('hotspots.html')
+
+@app.route('/getHotspot')
+def getHotspot():
+    curs = conn.cursor(pymysql.cursors.DictCursor)
+    sql = "SELECT p.P_SN, h.H_TIME, h.H_DESC, p.P_SEX, p.P_AGE, p.P_AFF FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
+    curs.execute(sql)
+    result = curs.fetchall()
+    new_result = {}
+    for r in result:
+        p_sn = r['P_SN']
+        h_date = r['H_TIME'].strftime("%Y-%m-%d")
+        h_time = r['H_TIME'].strftime("%H:%M:%S")
+        h_desc = r['H_DESC']
+        p_sex = r['P_SEX']
+        print(p_sn)
+        print(p_sex)
+
+        if p_sn not in new_result:
+            result_by_date = {}
+            result_by_date[h_date] = [[h_time, h_desc]]
+            new_result[p_sn] = {}
+            new_result[p_sn]["data"] = {"p_sex": r['P_SEX'], "p_age": r['P_AGE'], "p_aff": r['P_AFF']}
+            new_result[p_sn]["hotspots"] = result_by_date
+        else:
+            if h_date in new_result[p_sn]["hotspots"]:
+                new_result[p_sn]["hotspots"][h_date].append([h_time, h_desc])
+            else:
+                new_result[p_sn]["hotspots"][h_date] = [[h_time, h_desc]]
+
+    return jsonify(new_result)
+"""
+
+@app.route('/hotspots')
+def showHotspot():
+    return render_template('hotspots.html')
+
+@app.route('/getHotspot')
+def getHotspot():
+    curs = conn.cursor(pymysql.cursors.DictCursor)
+    sql = "SELECT p.P_SN, h.H_TIME, h.H_DESC, p.P_SEX, p.P_AGE, p.P_AFF FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN WHERE 1"
+    curs.execute(sql)
+    result = curs.fetchall()
+    new_result = {}
+    for r in result:
+        p_sn = r['P_SN']
+        h_date = r['H_TIME'].strftime("%Y-%m-%d")
+        h_time = r['H_TIME'].strftime("%H:%M:%S")
+
+        if p_sn not in new_result:
+            result_by_date = {}
+            result_by_date[h_date] = [[h_time, h_desc]]
+            new_result[p_sn] = {}
+            new_result[p_sn]["data"] = {"p_sex" : r['P_SEX'], "p_age" : r['P_AGE'], "p_aff" : r['P_AFF']}
+            new_result[p_sn]["hotspots"] = result_by_date
+        else:
+            if h_date in new_result[p_sn]["hotspots"]:
+                new_result[p_sn]["hotspots"][h_date].append([h_time, h_desc])
+            else:
+                new_result[p_sn]["hotspots"][h_date] = [[h_time, h_desc]]
+    return jsonify(new_result)
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
 
 @app.context_processor
 def override_url_for():

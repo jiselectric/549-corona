@@ -7,23 +7,30 @@
 </head>
 <body>
     {% include 'format.html' %}
-    <h1><span>{{q_num}}</span>{{q_text}}</h1>
-    <form action="/startAssessment" method="get">
+    <div id="assessment-body">
+    <h1 id="q-text"><span id="q-num">{{q_num}}</span>{{q_text}}</h1>
+    <form action="/startAssessment" method="get" id="answer-type">
         {% for ex in examples %}
             {% if q_type == 0 %}
+        <input type="radio" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}" id="assessment-radio"/>
+        <span class="checkmark"></span>
         <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
-        <input type="radio" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
             {% elif q_type == 1 %}
-        <input type="checkbox" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
         <label for="{{ex['EX_TEXT'].replace(' ', '_')}}">{{ex['EX_TEXT']}}</label>
+        <input type="checkbox" id="{{ex['EX_TEXT'].replace(' ', '_')}}" name="answer" value="{{ex['A_ANS']}}"/>
             {% else %}
-        <input type="text" name="answer" value="" placeholder="{{ex['EX_TEXT']}}"/>
+        <input type="text" name="answer" value="" placeholder="{{ex['EX_TEXT']}}" id="assessment-type"/>
             {% endif %}
-
         {% endfor %}
         <input type="hidden" value="{{q_sn}}" name="q_sn"/>
-        <input type="submit" value="계속하기"/>
+        <!--
+        <a href="javascript:history.back();">
+            <input type="button" value="Previous">
+        </a>
+        -->
+        <input type="submit" value="Next" id="assessment-next"/>
     </form>
+    </div>
 </body>
 </html>
 
