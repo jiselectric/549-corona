@@ -56,36 +56,6 @@
         </tfoot>
     </table>
 
-    <!--
-    <form action="/saveHotspot" method="post">
-        <table width="100%" style="display:none;border:1px solid black;" id="formDate">
-            <colgroup>
-                <col width="400">
-            </colgroup>
-            <thead>
-                <tr>
-                    <td> Date </td>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <input type="date" name="p-date" id="p-date" placeholder="Date (YY-MM-DD)">
-                    </td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td>
-                        <input type="button" value="add-data" id="add-data">
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-    </form>
-    -->
-
-
     <form action="/saveHotspot" method="post">
     <table width="100%" style="display:none;border:1px solid black;" id="formData">
         <colgroup>
@@ -153,8 +123,7 @@
         $("#add").on('click', function(){
             var html = '';
             html += '<tr>';
-            html += '    <td><input type="text" name="date[]" placeholder="YY-MM-DD"/> </td>';
-            html += '    <td><input type="text" name="time[]" placeholder="00:00:00"/> </td>';
+            html += '    <td><input type="text" name="time[]" placeholder="YY-MM-DD 00:00:00"/> </td>';
             html += '    <td><input type="text" name="desc[]" placeholder="설명을 입력하세요"/> </td>';
             html += '</tr>';
             $("#formData").find("tbody").append(html);

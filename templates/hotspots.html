@@ -24,16 +24,18 @@
             let html = '';
 
             $.each(data, function(p_sn, p_data){
-                let dates = data.dates;
+                let dates = p_data.dates;
+                console.log(dates);
+                console.log(data.p_sex);
                 html += '<div class="positive" data-sn="'+p_sn+'">';
                 html += '    <div class="positive-info">';
                 html += '        <span class="positive-title-num">';
                 html += '        Positive Case #'+p_sn+'';
                 html += '        </span>';
                 html += '        <div class="positive-id">';
-                html += '            <span> Sex : '+data.p_sex+' | </span>';
-                html += '            <span> Age Group : '+data.p_sex+' | </span>';
-                html += '            <span> Affiliation : '+data.aff_nm+' </span>';
+                html += '            <span> Sex : '+p_data.p_sex+' | </span>';
+                html += '            <span> Age Group : '+p_data.p_age+' | </span>';
+                html += '            <span> Affiliation : '+p_data.aff_nm+' </span>';
                 html += '        </div>';
                 html += '    </div>';
                 html += '    <div class="hotspots" style="display:none;">';

@@ -10,6 +10,7 @@ from codecs import open
 from apscheduler.schedulers.background import BackgroundScheduler
 from bs4 import BeautifulSoup
 from pprint import pprint
+from googletrans import Translator
 
 app = Flask(__name__)
 app.secret_key = 'jiselectric'
@@ -74,6 +75,7 @@ def downloadSVG():
     f.close()
 
 def crawlLocationConfirm():
+    tr = Translator()
     res = requests.get('http://ncov.mohw.go.kr/')
     soup = BeautifulSoup(res.text, 'html.parser')
     curs = conn.cursor()
@@ -81,7 +83,12 @@ def crawlLocationConfirm():
     for button in buttons:
         spans = button.find_all('span')
         LOC_NUM = button['data-city'].replace('map_city', '')
-        LOC_NAME = spans[0].text
+
+        trans = tr.translate(spans[0].text, dest='en')
+        LOC_NAME = trans.text
+        if LOC_NAME[0].islower() or " " in LOC_NAME:
+            LOC_NAME = trans.extra_data['translation'][-1][-1]
+            LOC_NAME = LOC_NAME[0].upper() + LOC_NAME[1:]
         CONFIRM = spans[1].text.replace(',', '')
         #print(LOC_NUM, LOC_NAME, CONFIRM)
         sql = 'SELECT * FROM location WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND LOC_SN=%s'
@@ -102,22 +109,21 @@ def crawlLocationConfirm():
         curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
     conn.commit()
 
+@app.route('/getTestingNumber')
 def getTestingNumber():
     date = request.args.get('date')
-    print(date)
     now = datetime.datetime.strptime(date, '%Y-%m-%d')
     yesterday = str(now - datetime.timedelta(days=1))[:10]
     result = {}
 
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = 'SELECT * FROM testing WHERE REGIST_DTM=%s'
+    sql = 'SELECT * FROM testing WHERE REGIST_DTM=%s ORDER BY TESTING_SN DESC LIMIT 2'
     curs.execute(sql, yesterday)
     result = curs.fetchall()
 
     print(result)
     return jsonify(result)
 
-@app.route('/getTestingNumber')
 def crawlTestingNumber():
     res = requests.get('http://ncov.mohw.go.kr/en/')
     soup = BeautifulSoup(res.text, 'html.parser')
@@ -306,7 +312,7 @@ def showHotspot():
 @app.route('/getHotspot')
 def getHotspot():
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT p.P_SN, DATE(H_TIME) AS H_DATE, TIME(H_TIME) AS H_TM, H_DESC, IF(P_SEX=0, 'Male', 'Female') AS P_SEX, (SELECT AFF_NM FROM affiliation WHERE AFF_SN=p.P_AFF) AS AFF_NM FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
+    sql = "SELECT p.P_SN, p.P_AGE, DATE(H_TIME) AS H_DATE, TIME(H_TIME) AS H_TM, H_DESC, IF(P_SEX=0, 'Male', 'Female') AS P_SEX, (SELECT AFF_NM FROM affiliation WHERE AFF_SN=p.P_AFF) AS AFF_NM FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
     curs.execute(sql)
     result = curs.fetchall()
     pprint(result)
@@ -320,8 +326,9 @@ def getHotspot():
         h_desc = data['H_DESC']
         h_tm = str(data['H_TM'])
         p_sex = data['P_SEX']
+        p_age = data['P_AGE']
         if p_sn not in new_result:
-            new_result[p_sn] = {"aff_nm" : aff_nm, "p_sex" : p_sex, "dates" : {}}
+            new_result[p_sn] = {"aff_nm": aff_nm, "p_sex": p_sex, "p_age":p_age, "dates": {}}
         dates = new_result[p_sn]["dates"]
 
         if h_date not in dates:
@@ -330,7 +337,7 @@ def getHotspot():
         times = dates[h_date]
         if h_tm not in times:
             times[h_tm] = h_desc
-
+    print(new_result)
     return jsonify(new_result)
 
 @app.route('/contact')

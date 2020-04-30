@@ -12,6 +12,15 @@ table {border-collapse:collapse; border-spacing:0;}
 
 
 /* common */
+
+body {
+    min-width: 650px;
+}
+
+#corona-testing {
+    max-width: 843px;
+}
+
 a {
     text-decoration: none;
     color: inherit;
@@ -84,7 +93,7 @@ ol, ul {
     }
     .slideBtn {
         transition: .5s;
-        position: fixed;
+        position: absolute;
         left: 0;
         cursor: pointer;
         color: #FFFFFF;
@@ -93,14 +102,14 @@ ol, ul {
         left: 10px;
     }
     .sidenav {
-        height: 100%;
+        height: 100vh;
         width: 0;
-        position: fixed;
+        position: absolute;
         z-index: 1;
         top: 0;
         left: 0;
         background-color: #e3e3e3;
-        overflow-x: hidden;
+        /*overflow-x: hidden;*/
         transition: 0.5s;
         padding-top: 60px;
     }
@@ -612,4 +621,14 @@ ol, ul {
     margin-bottom: 2%;
     margin-left: 3%;
     font-size: 18px;
+}
+
+.testing-list {
+    font-size: 18px;
+    margin-left: 15%;
+    margin-top: 15%;
+}
+
+.testing-performed {
+    margin-bottom: 10%;
 }
