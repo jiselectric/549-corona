@@ -6,107 +6,122 @@
     <div id="main-content" class="main-content">
         <div id="content-left" class="content-left">
             <div id="corona-status" class="corona-status">
-                    <h3>
-                        <span id="cases-title"> Cases in  Korea </span>
-                    </h3>
-                    <div id="status-list" class="status-list">
-                        <p class="add-sum sum-first"> = </p>
-                        <p class="add-sum add-first"> + </p>
-                        <p class="add-sum add-second"> + </p>
-                        <ul>
-                            <li>
-                                <div id="confirmed" class="confirmed">
-                                    <div id="confirmed-title" class="status-title">
-                                        <div> Confirmed Cases </div>
-                                        <div class="status-title-content">
-                                            <em id="accumulation"> (accumulation) </em>
-                                        </div>
-                                    </div>
-                                    <div id="confirmed-number" class="confirmed-number status-number">
-                                        <span id="confirmed-cases"></span>
-                                    </div>
-                                    <div id="confirmed-change" class="confirmed-change status-change">
-                                        <span id="daily-change"> Daily Change <span id="confirm-change"></span></span>
+                <h3>
+                    <span id="cases-title"> Cases in  Korea </span>
+                </h3>
+                <div id="status-list" class="status-list">
+                    <p class="add-sum sum-first"> = </p>
+                    <p class="add-sum add-first"> + </p>
+                    <p class="add-sum add-second"> + </p>
+                    <ul>
+                        <li>
+                            <div id="confirmed" class="confirmed">
+                                <div id="confirmed-title" class="status-title">
+                                    <div> Confirmed Cases </div>
+                                    <div class="status-title-content">
+                                        <em id="accumulation"> (accumulation) </em>
                                     </div>
                                 </div>
-                            </li>
-                            <li>
-                                <div id="released" class="released">
-                                    <div id="released-title" class="status-title">
-                                        <div> Released from Isolation </div>
-                                        <div class="status-title-content">
-                                            <em id="quarantine"> (Released from Quarantine) </em>
-                                        </div>
-                                    </div>
-                                    <div id="released-number" class="status-number">
-                                        <span id="released-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="release-change"></span>
+                                <div id="confirmed-number" class="confirmed-number status-number">
+                                    <span id="confirmed-cases"></span>
+                                </div>
+                                <div id="confirmed-change" class="confirmed-change status-change">
+                                    <span id="daily-change"> Daily Change <span id="confirm-change"></span></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="released" class="released">
+                                <div id="released-title" class="status-title">
+                                    <div> Released from Isolation </div>
+                                    <div class="status-title-content">
+                                        <em id="quarantine"> (Released from Quarantine) </em>
                                     </div>
                                 </div>
-                            </li>
-                            <li>
-                                <div id="isolated" class="isolated">
-                                    <div class="status-title">
-                                        <div> Isolated </div>
-                                    </div>
-                                    <div class="status-number">
-                                        <span id="isolated-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="isolate-change"></span>
-                                    </div>
+                                <div id="released-number" class="status-number">
+                                    <span id="released-cases"></span>
                                 </div>
-                            </li>
-                            <li>
-                                <div id="deceased" class="deceased">
-                                    <div class="status-title">
-                                        <div> Deceased </div>
-                                    </div>
-                                    <div class="status-number">
-                                        <span id="deceased-cases"></span>
-                                    </div>
-                                    <div class="status-change">
-                                        <span id="decease-change"></span>
-                                    </div>
+                                <div class="status-change">
+                                    <span id="release-change"></span>
                                 </div>
-                            </li>
-                        </ul>
-                    </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="isolated" class="isolated">
+                                <div class="status-title">
+                                    <div> Isolated </div>
+                                </div>
+                                <div class="status-number">
+                                    <span id="isolated-cases"></span>
+                                </div>
+                                <div class="status-change">
+                                    <span id="isolate-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="deceased" class="deceased">
+                                <div class="status-title">
+                                    <div> Deceased </div>
+                                </div>
+                                <div class="status-number">
+                                    <span id="deceased-cases"></span>
+                                </div>
+                                <div class="status-change">
+                                    <span id="decease-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <!-- Corona Testing / Graph -->
-                <div id="corona-testing" class="corona-testing">
-                    <h3>
-                        <span id="testing-title"> Testing in Korea</span>
-                    </h3>
-                    <div id="testing-info">
-                        <div id="testing-number">
-                            <ul class="testing-list">
-                                <li class="testing-performed">
-                                    <div>
-                                        <span> Tests Performed :  </span>
+                <div id="us-status-list" class="status-list">
+                    <ul>
+                        <li>
+                            <div id="us-confirmed" class="us-confirmed">
+                                <div id="us-confirmed-title" class="us-status-title">
+                                    <div> Confirmed Cases </div>
+                                    <div class="status-title-content">
+                                        <em id="us-accumulation"> (accumulation) </em>
                                     </div>
-                                    <div>
-                                        <span id="performed-cases"></span>
+                                </div>
+                                <div id="us-confirmed-number" class="confirmed-number us-status-number">
+                                    <span id="us-confirmed-cases"></span>
+                                </div>
+                                <div id="us-confirmed-change" class="confirmed-change us-status-change">
+                                    <span id="us-daily-change"> Daily Change <span id="us-confirm-change"></span></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="us-released" class="us-released">
+                                <div id="us-released-title" class="us-status-title">
+                                    <div> Released from Isolation </div>
+                                    <div class="status-title-content">
+                                        <em id="us-quarantine"> (Released from Quarantine) </em>
                                     </div>
-                                </li>
-                                <li>
-                                    <div>
-                                        <span> Tests Concluded : </span>
-                                    </div>
-                                    <div>
-                                        <span id="concluded-cases"></span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="testing-chart" style="height:200px;width:41%;">
-                            <canvas id="myChart">
-
-                            </canvas>
-                        </div>
-                    </div>
+                                </div>
+                                <div id="us-released-number" class="us-status-number">
+                                    <span id="us-released-cases"></span>
+                                </div>
+                                <div class="us-status-change">
+                                    <span id="us-release-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="us-isolated" class="us-isolated">
+                                <div class="us-status-title">
+                                    <div> Deceased </div>
+                                </div>
+                                <div class="us-status-number">
+                                    <span id="us-isolated-cases"></span>
+                                </div>
+                                <div class="us-status-change">
+                                    <span id="us-isolate-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -140,6 +155,7 @@
         $('#map').html(html);
     });
 
+    /*
     $.ajax({
         url : '/getTestingNumber',
         method : 'GET',
@@ -152,6 +168,7 @@
         $('#performed-cases').html(test_performed);
         $('#concluded-cases').html(test_concluded);
     })
+    */
 
     $.ajax({
         url: '/getLiveNumber',

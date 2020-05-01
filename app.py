@@ -121,7 +121,7 @@ def getTestingNumber():
     curs.execute(sql, yesterday)
     result = curs.fetchall()
 
-    print(result)
+    #print(result)
     return jsonify(result)
 
 def crawlTestingNumber():
@@ -251,9 +251,9 @@ def assessmentFinish():
         return redirect('/assessment')
     else:
         u_sn = session["u_sn"]
-        print(u_sn)
+        #print(u_sn)
         del session["u_sn"]
-        print(u_sn)
+        #print(u_sn)
         return render_template('assessmentFinish.html', u_sn=u_sn)
 
 @app.route('/showAssessment', methods=['POST', 'GET'])
@@ -265,9 +265,38 @@ def loadAssessment():
     u_sn = request.args.get('u_sn')
 
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT a.Q_SN, a.A_ANS, q.Q_TEXT FROM answer a LEFT JOIN question q ON a.Q_SN=q.Q_SN WHERE U_SN=%s ORDER BY Q_SN"
+    sql = "SELECT a.Q_SN, a.A_ANS, e.EX_TEXT, q.Q_TEXT, q.Q_TYPE, q.Q_NUM FROM answer a LEFT JOIN example e ON a.A_ANS = e.A_ANS AND a.Q_SN = e.Q_SN LEFT JOIN question q ON a.Q_SN=q.Q_SN WHERE U_SN=%s ORDER BY Q_SN"
     curs.execute(sql, (u_sn))
     result = curs.fetchall()
+    pprint(result)
+    new_result = {}
+    for r in result:
+        q_sn = r['Q_SN']
+        a_ans = r['A_ANS']
+        ex_text = r['EX_TEXT']
+        q_text = r['Q_TEXT']
+        q_type = r['Q_TYPE']
+        q_num = r['Q_NUM']
+        if q_sn not in new_result:
+            answer = {}
+            answer['q_text'] = q_text
+            answer['q_type'] = q_type
+            answer['q_num'] = q_num
+            if q_type != 2:
+                answer['answers'] = ex_text
+            else:
+                answer['answers'] = a_ans
+            new_result[q_sn] = answer
+        else:
+
+            new_result[q_sn]['answers'] += ", " + (ex_text if q_type != 2 else a_ans)
+        pprint(new_result)
+    sql = "SELECT * FROM users WHERE U_SN=%s"
+    curs.execute(sql, (u_sn))
+    users = curs.fetchone()
+
+    result = {"assessments": new_result, "info": users}
+    pprint(result)
     return jsonify(result)
 
 @app.route('/addHotspot')
@@ -280,13 +309,15 @@ def addHotspot():
 
 @app.route('/startHotspot', methods=['GET', 'POST'])
 def startHotspot():
+    caseNum = request.args.get('caseNum')
     sex = request.args.get('sex')
     age = request.args.get('age')
     affiliation = request.args.get('affiliation')
+    area = request.args.get('area')
 
     curs = conn.cursor()
-    sql = "INSERT INTO positive(P_SEX, P_AGE, P_AFF) VALUES(%s, %s, %s)"
-    curs.execute(sql, (sex, age, affiliation))
+    sql = "INSERT INTO positive(P_NUM, P_SEX, P_AGE, P_AFF, P_AREA) VALUES(%s, %s, %s, %s, %s)"
+    curs.execute(sql, (caseNum, sex, age, affiliation, area))
     iid = curs.lastrowid
     conn.commit()
     print(iid)
@@ -297,8 +328,8 @@ def saveHotspot():
     curs = conn.cursor()
     p_sn = request.form.get('p_sn')
     time = request.form.getlist('time[]')
-
     desc = request.form.getlist('desc[]')
+
     for t, d in zip(time, desc):
         sql = "INSERT INTO hotspots VALUES (%s, %s, %s)"
         curs.execute(sql, (p_sn, t, d))
@@ -312,10 +343,10 @@ def showHotspot():
 @app.route('/getHotspot')
 def getHotspot():
     curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = "SELECT p.P_SN, p.P_AGE, DATE(H_TIME) AS H_DATE, TIME(H_TIME) AS H_TM, H_DESC, IF(P_SEX=0, 'Male', 'Female') AS P_SEX, (SELECT AFF_NM FROM affiliation WHERE AFF_SN=p.P_AFF) AS AFF_NM FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
+    sql = "SELECT p.P_SN, p.P_NUM, p.P_AREA, p.P_AGE, DATE(H_TIME) AS H_DATE, TIME(H_TIME) AS H_TM, H_DESC, IF(P_SEX=0, 'Male', 'Female') AS P_SEX, (SELECT AFF_NM FROM affiliation WHERE AFF_SN=p.P_AFF) AS AFF_NM FROM hotspots h LEFT JOIN positive p ON h.P_SN = p.P_SN"
     curs.execute(sql)
     result = curs.fetchall()
-    pprint(result)
+    #pprint(result)
 
     new_result = {}
 
@@ -327,8 +358,11 @@ def getHotspot():
         h_tm = str(data['H_TM'])
         p_sex = data['P_SEX']
         p_age = data['P_AGE']
+        p_num = data['P_NUM']
+        p_area = data['P_AREA']
+
         if p_sn not in new_result:
-            new_result[p_sn] = {"aff_nm": aff_nm, "p_sex": p_sex, "p_age":p_age, "dates": {}}
+            new_result[p_sn] = {"aff_nm": aff_nm, "p_sex": p_sex, "p_age":p_age, "dates": {}, "p_num": p_num, "p_area": p_area}
         dates = new_result[p_sn]["dates"]
 
         if h_date not in dates:
@@ -343,6 +377,10 @@ def getHotspot():
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html')
 
 @app.context_processor
 def override_url_for():

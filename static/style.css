@@ -17,10 +17,6 @@ body {
     min-width: 650px;
 }
 
-#corona-testing {
-    max-width: 843px;
-}
-
 a {
     text-decoration: none;
     color: inherit;
@@ -64,7 +60,7 @@ ol, ul {
 
 #content-right > #map-title {
     font-size: 22px;
-    margin: 50px;
+    margin: 40px;
 }
 
 #content-right > .map-wrapper {
@@ -89,10 +85,13 @@ ol, ul {
     }
     #content-left {
         width: 100%;
+        max-width: 650px;
         margin-left: 0;
     }
     #content-right {
         width: 100%;
+        max-width: 650px;
+        float: left;
     }
     .slideBtn {
         transition: .5s;
@@ -211,9 +210,32 @@ ol, ul {
     padding: 5px 5px;*/
 }
 
+#us-status-list>ul>li {
+    display: inline-block;
+    list-style-type: none;
+    float: left;
+    font-size: 20px;
+    padding-top: 10px;
+}
+
+#us-status-list>ul>li>div{
+    padding-top: 10px;
+    /*display: inline-table;
+    height: 160px;
+    width: 120px;
+    padding: 5px 5px;*/
+}
+
+
 .status-title {
     display: table;
     width: 140px;
+    height: 85px;
+}
+
+.us-status-title {
+    display: table;
+    width: 186.6px;
     height: 85px;
 }
 
@@ -238,11 +260,31 @@ ol, ul {
     height: 40px;
 }
 
+.us-status-number {
+    display: table;
+    width: 186.6px;
+    height: 52px;
+}
+
+.us-status-change {
+    display: table;
+    width: 186.6px;
+    height: 40px;
+}
+
+
 #status-list {
     text-align: center;
     margin-left: 35px;
     position: relative;
 }
+
+#us-status-list {
+    text-align: center;
+    margin-left: 35px;
+    position: relative;
+}
+
 
 #confirmed {
     background: #2b75e0;
@@ -255,6 +297,21 @@ ol, ul {
 }
 
 #isolated {
+    background: #05afc8;
+    color: #FFFFFF;
+}
+
+#us-confirmed {
+    background: #2b75e0;
+    color: #FFFFFF;
+}
+
+#us-released {
+    background: #123a91;
+    color: #FFFFFF;
+}
+
+#us-isolated {
     background: #05afc8;
     color: #FFFFFF;
 }
@@ -272,12 +329,21 @@ ol, ul {
     font-size: 13px;
 }
 
+#us-accumulation {
+    font-size: 13px;
+}
+
+#us-quarantine {
+    font-size: 13px;
+}
+
+
 .status-number>span {
     display: table-cell;
     vertical-align: middle;
 }
 
-#confirm-change, #daily-change, #release-change, #isolate-change, #decease-change {
+#us-confirm-change, #confirm-change, #us-release-change, #daily-change, #release-change, #isolate-change, #decease-change, #us-daily-change {
     font-size: 12.5px;
 }
 
@@ -305,46 +371,13 @@ ol, ul {
     top: 125px;
 }
 
-#corona-testing {
-    float: left;
-    position: relative;
-    margin: 28px;
-    width: 100%;
-    padding: 15px;
-}
-
-#corona-testing>h3>#testing-title {
+/**
+.testing-title {
     font-size : 22px;
     font-weight: 600;
     color: #000;
 }
-
-#corona-testing>#testing-info>div {
-    float: left;
-    width: 41%;
-    height: 200px;
-    margin-top: 40px;
-}
-
-#corona-testing>#testing-info>#testing-number {
-    background-color: #eafeff
-}
-
-#corona-testing>#testing-info>#testing-chart {
-    background-color: #f2f2f2
-}
-
-
-#corona-testing>#testing-info>#testing-number>ul>li {
-    display: inline-block;
-    list-style-type: none;
-    text-align: cetner;
-    padding-top: 10px;
-}
-
-#corona-testing>#testing-info>#testing-number>ul>li>div {
-    display: table-cell;
-}
+**/
 
 /** Self Assessment **/
 #assessment-main {
@@ -632,12 +665,106 @@ ol, ul {
     font-size: 18px;
 }
 
-.testing-list {
-    font-size: 18px;
-    margin-left: 15%;
-    margin-top: 15%;
+#corona-testing {
+    margin: 40px;
 }
 
-.testing-performed {
-    margin-bottom: 10%;
+#testing-title {
+    display: inline-block;
+    font-size: 22px;
+    font-weight: 600;
+    color: #000;
+    position: relative;
+    width: 100%;
 }
+
+
+#testing-container>ul>li{
+    display: inline-block;
+    list-style-type: none;
+    float: left;
+    font-size: 15px;
+    padding-top: 10px;
+    height: 280px;
+    width: 374px;
+}
+
+#add-container {
+    margin:
+}
+
+#add-container > h3 {
+    font-size: 30px;
+    margin-left: 40%;
+    margin-top: 2%
+}
+
+#add-container > #positive-id {
+    margin-left: 30%;
+    margin-top: 3%;
+}
+
+#add-container> #positive-id > input[type='text'], select {
+    width: 50%;
+    padding: 12px 20px;
+    margin: 10px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#add-container #start {
+    width: 50%;
+    background-color: #4c638f;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#addSchedule {
+    margin-left: 30%;
+    margin-top: 3%;
+}
+
+#addSchedule input[type='text'] {
+    width: 50%;
+    padding: 12px 20px;
+    display: inline-block;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#add-buttons {
+    margin-left: 30%;
+    margin-top: 3%;
+}
+
+
+#add-buttons > input[type='button'] {
+    width: 25%;
+    background-color: #90ee90;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#add-buttons > input[type='submit'] {
+    width: 25%;
+    background-color: #8B0000;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+

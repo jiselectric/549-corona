@@ -13,15 +13,23 @@
         .left{
             text-align:left!important;
         }
+        table{
+            border: 1px solid black;
+        }
+        table tr td{
+            border: 1px solid #eee;
+        }
     </style>
     <input type="number" id="u_sn" placeholder="USER_SN"/>
     <input type="button" id="submit" value="조회하기"/>
+    <div id="users">
+    </div>
     <table id="ans_table">
         <colgroup>
             <col width="50"/>
             <col width="500"/>
-            <col width="50"/>
-            <col width="50"/>
+            <col width="200"/>
+            <col width="200"/>
         </colgroup>
         <thead>
             <tr>
@@ -44,18 +52,43 @@
                     data: {'u_sn' : u_sn},
                     method: 'GET'
                 }).done(function(result){
+                    console.log(result);
+                    var user = result.info;
                     var html = '';
-                    $.each(result, function(pIndex, pValue){
+                    $.each(user, function(key, value){
+                        html += '<div>';
+                        html += '   <span>'+key+'</span>';
+                        html += '   <span>'+value+'</span>';
+                        html += '</div>';
+                    });
+                    $("#users").html(html);
+                    var html = '';
+                    $.each(result.assessments, function(q_sn, pValue){
+
+                        var q_type = pValue.q_type;
+                        var q_text = pValue.q_text;
+                        var q_num = pValue.q_num;
+
                         html += '<tr>';
-                        html += '    <td class="middle">'+pValue.Q_SN+'</td>';
-                        html += '    <td>'+pValue.Q_TEXT+'</td>';
-                        if(pValue.A_ANS == '0'){
-                        html += '    <td class="middle"></td>';
-                        html += '    <td class="middle">V</td>';
+                        html += '    <td class="middle">'+q_num+'</td>';
+                        html += '    <td>'+q_text+'</td>';
+                        if(q_type == '0'){
+
+                            if(pValue.answers == 'No'){
+                            html += '    <td class="middle"></td>';
+                            html += '    <td class="middle">V</td>';
+                            }
+                            else if(pValue.answers == 'Yes'){
+                            html += '    <td class="middle">V</td>';
+                            html += '    <td class="middle"></td>';
+                            }
+                            else{
+                                html += '    <td class="middle" colspan="2">'+pValue.answers+'</td>';
+                            }
+                            return;
                         }
                         else{
-                        html += '    <td class="middle">V</td>';
-                        html += '    <td class="middle"></td>';
+                            html += '    <td class="middle" colspan="2">'+pValue.answers+'</td>';
                         }
                         html += '</tr>';
                     });
