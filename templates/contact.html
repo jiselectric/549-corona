@@ -6,8 +6,36 @@
     <title> Self-Assessment </title>
 </head>
 <body>
-    {% include 'format.html' %}
+    <style>
+        #contact-container {
+            margin-left: 28%;
+            margin-top: 10%;
+            font-size: 25px;
+        }
 
+        #hospital-contact {
+            margin-bottom: 5%;
+        }
+
+        #hotline-contact {
+            margin-bottom: 5%;
+        }
+    </style>
+    {% include 'format.html' %}
+    <div id="contact-container">
+        <div id="hospital-contact">
+            <span> 549th Hospital Center </span>
+            <span> DSN : 737-1411 </span>
+        </div>
+        <div id="hotline-contact">
+            <span> 549th Hospital COVID-19 Hotline</span>
+            <span> DSN : 737-2566 </span>
+        </div>
+        <div id="kdcdc-contact">
+            <span> KCDC : </span>
+            <span> 1339 </span>
+        </div>
+    </div>
 </body>
 </html>
 

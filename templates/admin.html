@@ -2,7 +2,14 @@
 <html lang="en">
 {% include 'header.html' %}
 <body>
-HI
+    <div id="admin-container">
+        <span class="admin-title"> Admin Page </span>
+        <div class="button-container">
+            <input type="button" onclick="location.href='/showAssessment';" class='admin-button' value="Assessment Result"/>
+            <input type="button" onclick="location.href='/addHotspot';" class='admin-button' value="Add Hotspot"/>
+            <input type="button" onclick="location.href='/editHotspot';" class='admin-button' value="Edit Hotspot"/>
+        </div>
+    </div>
 </body>
 
 </html>

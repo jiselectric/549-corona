@@ -1,94 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'header.html' %}
-<head>
-    <meta charset="UTF-8">
-    <title> Self-Assessment </title>
-</head>
 <body>
     <style>
-        .middle{
-            text-align:center!important;
+        .middle {
+            text-align: center !important;
         }
-        .left{
-            text-align:left!important;
+
+        .left {
+            text-align: left !important;
         }
-        table{
+
+        table {
             border: 1px solid black;
         }
-        table tr td{
+
+        table tr td {
             border: 1px solid #eee;
         }
+
+        #ans_table {
+            margin-top: 3%;
+            margin-left: 5%;
+        }
     </style>
-    <input type="number" id="u_sn" placeholder="USER_SN"/>
-    <input type="button" id="submit" value="조회하기"/>
-    <div id="users">
+    <div id="result-container">
+        <span class="result-title"> Assessment Result </span>
+        <div id="assessment-search">
+            <input type="number" id="u_sn" placeholder="Search Case #" />
+            <input type="button" id="submit" value="Search" />
+        </div>
+        <div id="user-result" style="display:none;">
+            <span id="result-title"> User Info </span>
+            <div id="user-info">
+                <span> Case # : <span id="result-case"></span> |</span>
+                <span> Affiliation : <span id="result-affiliation"></span> |</span>
+                <span> Area : <span id="result-area"></span> | </span>
+                <span> Unit : <span id="result-area"></span> |</span>
+                <span> Last Name : <span id="result-last"></span> | </span>
+                <span> First Name : <span id="result-first"></span> | </span>
+                <span> Phone Number : <span id="result-phone"></span> |</span>
+                <span> Register Time : <span id="result-date"></span> </span>
+            </div>
+        </div>
+        <div id="assessment-answer-result" style="display:none;">
+            <span id="answer-title"> Result </span>
+            <table id="ans_table">
+                <colgroup>
+                    <col width="50" />
+                    <col width="500" />
+                    <col width="200" />
+                    <col width="200" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th class="left">Question</th>
+                        <th>YES</th>
+                        <th>NO</th>
+                    </tr>
+                </thead>
+                <tbody role="ans">
+                </tbody>
+            </table>
+        </div>
     </div>
-    <table id="ans_table">
-        <colgroup>
-            <col width="50"/>
-            <col width="500"/>
-            <col width="200"/>
-            <col width="200"/>
-        </colgroup>
-        <thead>
-            <tr>
-                <th>번호</th>
-                <th class="left">질문 내용</th>
-                <th>YES</th>
-                <th>NO</th>
-            </tr>
-        </thead>
-        <tbody role="ans">
-
-        </tbody>
-    </table>
-    <script>
-        $('#submit').on('click', function(e){
+</body>
+<script>
+    $('#submit').on('click', function (e) {
             var u_sn = $("#u_sn").val();
-            if(u_sn != ''){
+            if (u_sn != '') {
                 $.ajax({
-                    url:'/loadAssessment',
-                    data: {'u_sn' : u_sn},
+                    url: '/loadAssessment',
+                    data: { 'u_sn': u_sn },
                     method: 'GET'
-                }).done(function(result){
-                    console.log(result);
+                }).done(function (result) {
                     var user = result.info;
-                    var html = '';
-                    $.each(user, function(key, value){
-                        html += '<div>';
-                        html += '   <span>'+key+'</span>';
-                        html += '   <span>'+value+'</span>';
-                        html += '</div>';
-                    });
-                    $("#users").html(html);
-                    var html = '';
-                    $.each(result.assessments, function(q_sn, pValue){
 
+                    $('#user-result').show();
+
+                    $('#result-case').html(user['U_SN']);
+                    $('#result-area').html(user['AREA']);
+                    $('#result-affiliation').html(user['AFFIL']);
+                    $('#result-unit').html(user['UNIT']);
+                    $('#result-last').html(user['LAST_NAME']);
+                    $('#result-first').html(user['FIRST_NAME']);
+                    $('#result-phone').html(user['PHONE_NUM']);
+                    $('#result-date').html(user['REGIST_DTM'].slice(0, user['REGIST_DTM'].length-12));
+
+                    $('#assessment-answer-result').show()
+                    var html = '';
+                    $.each(result.assessments, function (q_sn, pValue) {
+                        //console.log(pValue);
                         var q_type = pValue.q_type;
                         var q_text = pValue.q_text;
                         var q_num = pValue.q_num;
 
                         html += '<tr>';
-                        html += '    <td class="middle">'+q_num+'</td>';
-                        html += '    <td>'+q_text+'</td>';
-                        if(q_type == '0'){
+                        html += '    <td class="middle">' + q_num + '</td>';
+                        html += '    <td>' + q_text + '</td>';
+                        if (q_type == '0') {
 
-                            if(pValue.answers == 'No'){
-                            html += '    <td class="middle"></td>';
-                            html += '    <td class="middle">V</td>';
+                            if (pValue.answers == 'No') {
+                                html += '    <td class="middle"></td>';
+                                html += '    <td class="middle">V</td>';
                             }
-                            else if(pValue.answers == 'Yes'){
-                            html += '    <td class="middle">V</td>';
-                            html += '    <td class="middle"></td>';
+                            else if (pValue.answers == 'Yes') {
+                                html += '    <td class="middle">V</td>';
+                                html += '    <td class="middle"></td>';
                             }
-                            else{
-                                html += '    <td class="middle" colspan="2">'+pValue.answers+'</td>';
+                            else {
+                                html += '    <td class="middle" colspan="2">' + pValue.answers + '</td>';
                             }
                             return;
                         }
-                        else{
-                            html += '    <td class="middle" colspan="2">'+pValue.answers+'</td>';
+                        else {
+                            html += '    <td class="middle" colspan="2">' + pValue.answers + '</td>';
                         }
                         html += '</tr>';
                     });
@@ -97,8 +124,5 @@
 
             }
         });
-
-
-    </script>
-</body>
+</script>
 </html>

@@ -7,6 +7,17 @@
 </head>
 <body>
     {% include 'format.html' %}
-    <h1>{{u_sn}}번호로 설문조사 완료!</h1>
+    <div id="finish-container">
+        <span id="finish-instruct">
+            Thank you for taking the time to complete this assessment.
+        </span>
+        <span id="finish-number">
+            #{{u_sn}}
+        </span>
+        <span id="finish-assist">
+            Please instruct the Case Number above to the connected COVID-19 Agent to better assist you.
+        </span>
+        <input type="button" onclick="location.href='/';" id='assessment-finish-btn' value="Home"/>
+    </div>
 </body>
 </html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'header.html' %}
+<!-- {% include 'footer.html' %} -->
 <body>
     {% include 'format.html' %}
     <div id="main-content" class="main-content">
@@ -75,6 +76,9 @@
                     </ul>
                 </div>
                 <div id="us-status-list" class="status-list">
+                    <h3>
+                        <span id="us-cases-title"> Cases in United States </span>
+                    </h3>
                     <ul>
                         <li>
                             <div id="us-confirmed" class="us-confirmed">
@@ -109,15 +113,15 @@
                             </div>
                         </li>
                         <li>
-                            <div id="us-isolated" class="us-isolated">
+                            <div id="us-deceased" class="us-deceased">
                                 <div class="us-status-title">
                                     <div> Deceased </div>
                                 </div>
                                 <div class="us-status-number">
-                                    <span id="us-isolated-cases"></span>
+                                    <span id="us-deceased-cases"></span>
                                 </div>
                                 <div class="us-status-change">
-                                    <span id="us-isolate-change"></span>
+                                    <span id="us-deceased-change"></span>
                                 </div>
                             </div>
                         </li>
@@ -155,27 +159,11 @@
         $('#map').html(html);
     });
 
-    /*
-    $.ajax({
-        url : '/getTestingNumber',
-        method : 'GET',
-        data : {date:now},
-        async: false
-    }).done(function (json){
-        var test_performed = json[0]['NUM'];
-        var test_concluded = json[1]['NUM'];
-
-        $('#performed-cases').html(test_performed);
-        $('#concluded-cases').html(test_concluded);
-    })
-    */
-
     $.ajax({
         url: '/getLiveNumber',
         method: 'GET',
         data: {date : now},
         async: false
-        //console.log(now)
     }).done(function (json) {
         var loc = json.location;
         $.each(loc, function(pIndex, pValue){
@@ -209,8 +197,8 @@
         });
 
         var sttus = json.status;
-        console.log(sttus);
         var confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
+
         $('#released').find('span[id=released-cases]').html(sttus[0]['NUM']);
         $('#isolated').find('span[id=isolated-cases]').html(sttus[1]['NUM']);
         $('#deceased').find('span[id=deceased-cases]').html(sttus[2]['NUM']);

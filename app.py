@@ -30,7 +30,7 @@ def getSVG():
 @app.route('/getLiveNumber')
 def getLiveNumber():
     date = request.args.get('date')
-    print(date)
+    #print(date)
     now = datetime.datetime.strptime(date, '%Y-%m-%d')
     #print(now)
     yesterday = str(now - datetime.timedelta(days=1))[:10]
@@ -41,7 +41,7 @@ def getLiveNumber():
     sql = "SELECT * FROM status WHERE REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['status'] = curs.fetchall()
-    #print(result)
+    #pprint(result)
 
     sql = "SELECT y.LOC_NAME, y.LOC_NUM, y.CONFIRM, p.CONFIRM AS `BEFORE` FROM location y LEFT JOIN location p ON y.LOC_NUM = p.LOC_NUM AND p.REGIST_DTM=DATE_SUB(y.REGIST_DTM, INTERVAL 1 DAY) WHERE y.REGIST_DTM=%s"
     curs.execute(sql, yesterday)
@@ -109,38 +109,16 @@ def crawlLocationConfirm():
         curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
     conn.commit()
 
-@app.route('/getTestingNumber')
-def getTestingNumber():
-    date = request.args.get('date')
-    now = datetime.datetime.strptime(date, '%Y-%m-%d')
-    yesterday = str(now - datetime.timedelta(days=1))[:10]
-    result = {}
-
-    curs = conn.cursor(pymysql.cursors.DictCursor)
-    sql = 'SELECT * FROM testing WHERE REGIST_DTM=%s ORDER BY TESTING_SN DESC LIMIT 2'
-    curs.execute(sql, yesterday)
-    result = curs.fetchall()
-
-    #print(result)
-    return jsonify(result)
-
-def crawlTestingNumber():
-    res = requests.get('http://ncov.mohw.go.kr/en/')
+#########################################################################################
+@app.route('/crawlUS')
+def crawlNumberUS():
+    res = requests.get('https://www.worldometers.info/coronavirus/country/us/')
     soup = BeautifulSoup(res.text, 'html.parser')
     curs = conn.cursor()
-    lis = soup.find('div', {'class':'misi_list'}).find_all('li')
 
-    index = 0
-    for li in lis:
-        spans = li.find_all('span')
-        TESTING_NAME = spans[0].text
-        TESTING_NUM = index
-        NUM = spans[1].text.replace(',', '')
-        index = index + 1
-        if index == 3: break
-        sql = 'INSERT INTO testing(TESTING_NAME, TESTING_NUM, NUM, REGIST_DTM) VALUES(%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
-        curs.execute(sql, (TESTING_NAME, TESTING_NUM, NUM))
-    conn.commit()
+    divs = soup.find('div', {'class': 'content-inner'}).find_all('h1')
+    spans = soup.find('div', {'class': 'content-inner'}).find_all('span')
+#########################################################################################
 
 @app.route('/assessment', methods=['GET', 'POST'])
 def assessment():
@@ -268,7 +246,7 @@ def loadAssessment():
     sql = "SELECT a.Q_SN, a.A_ANS, e.EX_TEXT, q.Q_TEXT, q.Q_TYPE, q.Q_NUM FROM answer a LEFT JOIN example e ON a.A_ANS = e.A_ANS AND a.Q_SN = e.Q_SN LEFT JOIN question q ON a.Q_SN=q.Q_SN WHERE U_SN=%s ORDER BY Q_SN"
     curs.execute(sql, (u_sn))
     result = curs.fetchall()
-    pprint(result)
+    #pprint(result)
     new_result = {}
     for r in result:
         q_sn = r['Q_SN']
@@ -288,15 +266,15 @@ def loadAssessment():
                 answer['answers'] = a_ans
             new_result[q_sn] = answer
         else:
-
             new_result[q_sn]['answers'] += ", " + (ex_text if q_type != 2 else a_ans)
-        pprint(new_result)
+
+        #pprint(new_result)
     sql = "SELECT * FROM users WHERE U_SN=%s"
     curs.execute(sql, (u_sn))
     users = curs.fetchone()
 
     result = {"assessments": new_result, "info": users}
-    pprint(result)
+    #pprint(result)
     return jsonify(result)
 
 @app.route('/addHotspot')
@@ -320,7 +298,7 @@ def startHotspot():
     curs.execute(sql, (caseNum, sex, age, affiliation, area))
     iid = curs.lastrowid
     conn.commit()
-    print(iid)
+    #print(iid)
     return jsonify({"P_SN": iid})
 
 @app.route('/saveHotspot', methods=['POST'])
@@ -371,12 +349,17 @@ def getHotspot():
         times = dates[h_date]
         if h_tm not in times:
             times[h_tm] = h_desc
-    print(new_result)
+    #print(new_result)
     return jsonify(new_result)
+
+@app.route('/editHotspot')
+def editHotspot():
+    return render_template('editHotspot.html')
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
+
 
 @app.route('/admin')
 def admin():
@@ -401,9 +384,6 @@ if __name__ == "__main__":
     scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
                       start_date='{} 20:48:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
-    scheduler.add_job(func=crawlTestingNumber, trigger='interval', hours=24,
-                      start_date='{} 20:48:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
-                      id='jiselectric_testing')
     scheduler.start()
     print('Scheduler jiselectic-location Registered!')
 
