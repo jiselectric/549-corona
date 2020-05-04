@@ -112,26 +112,49 @@ def crawlLocationConfirm():
             sql = "INSERT INTO location(LOC_NUM, LOC_NAME, CONFIRM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))"
             curs.execute(sql, (LOC_NUM, LOC_NAME, CONFIRM))
 
-    # status update으로 바꾸기
     lis = soup.find('ul', {'class': 'liveNum'}).find_all('li')
     for STTUS_NUM, li in enumerate(lis[1:]):
         STTUS_NAME = li.find('strong').contents[0]
         NUM = li.find('span', {'class':'num'}).text.replace(',', '')
         #print(STTUS_NUM, STTUS_NAME, NUM)
-        sql = 'INSERT INTO status(STTUS_NUM, STTUS_NAME, NUM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
-        curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
+        sql = "SELECT * FROM status WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND STTUS_NUM=%s"
+        curs.execute(sql, STTUS_NUM)
+        result = curs.fetchall()
+        if len(result) > 0:
+            sql = "UPDATE status SET NUM=%s WHERE STTUS_NUM=%s AND REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+            curs.execute(sql, (NUM, STTUS_NUM))
+        else:
+            sql = 'INSERT INTO status(STTUS_NUM, STTUS_NAME, NUM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
+            curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
+
     conn.commit()
 
-#########################################################################################
 @app.route('/crawlUS')
 def crawlNumberUS():
     res = requests.get('https://www.worldometers.info/coronavirus/country/us/')
     soup = BeautifulSoup(res.text, 'html.parser')
     curs = conn.cursor()
+    div = soup.find('div', {'class': 'content-inner'})
+    divs = div.find_all('div', {'class':'maincounter-number'})
+    #titles = div.find_all('div', {'id':'maincounter-wrap'})
+    name = ['Corona Cases', 'Death', 'Recovered']
 
-    divs = soup.find('div', {'class': 'content-inner'}).find_all('h1')
-    spans = soup.find('div', {'class': 'content-inner'}).find_all('span')
-#########################################################################################
+    for STTUS_NUM, d in enumerate(divs[0:]):
+        STTUS_NAME = name[STTUS_NUM]
+        NUM = int(d.find('span').text.strip().replace(',', ''))
+
+        sql = "SELECT * FROM US_status WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND STTUS_NUM=%s"
+        curs.execute(sql, (STTUS_NUM))
+        result = curs.fetchall()
+
+        if len(result) > 0:
+            sql = "UPDATE US_status SET NUM=%s WHERE STTUS_NUM=%s AND REGIST_DTM=DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+            curs.execute(sql, (NUM, STTUS_NUM))
+        else:
+            sql = 'INSERT INTO US_status(STTUS_NUM, STTUS_NAME, NUM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
+            curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
+    conn.commit()
+    return ""
 
 @app.route('/assessment', methods=['GET', 'POST'])
 def assessment():
@@ -380,7 +403,6 @@ def editHotspot():
 @app.route('/deleteHotspot')
 def deleteHotspot():
     caseNum = request.args.get('number')
-
 
     curs = conn.cursor()
     sql = "SELECT P_SN FROM positive WHERE P_NUM=%s"
