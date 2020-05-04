@@ -27,7 +27,7 @@
                                     <span id="confirmed-cases"></span>
                                 </div>
                                 <div id="confirmed-change" class="confirmed-change status-change">
-                                    <span id="daily-change"> Daily Change <span id="confirm-change"></span></span>
+                                    <!-- <span id="daily-change"> Daily Change <span id="confirm-change"></span></span> -->
                                 </div>
                             </div>
                         </li>
@@ -92,7 +92,7 @@
                                     <span id="us-confirmed-cases"></span>
                                 </div>
                                 <div id="us-confirmed-change" class="confirmed-change us-status-change">
-                                    <span id="us-daily-change"> Daily Change <span id="us-confirm-change"></span></span>
+                                    <!-- <span id="us-daily-change"> Daily Change <span id="us-confirm-change"></span></span> -->
                                 </div>
                             </div>
                         </li>
@@ -197,12 +197,18 @@
         });
 
         var sttus = json.status;
+        var us_sttus = json.US_status
+
         var confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
 
         $('#released').find('span[id=released-cases]').html(sttus[0]['NUM']);
         $('#isolated').find('span[id=isolated-cases]').html(sttus[1]['NUM']);
         $('#deceased').find('span[id=deceased-cases]').html(sttus[2]['NUM']);
         $('#confirmed').find('span[id=confirmed-cases]').html(confirm);
+
+        $('#us-confirmed').find('span[id=us-confirmed-cases]').html(us_sttus[0]['NUM']);
+        $('#us-released').find('span[id=us-released-cases]').html(us_sttus[1]['NUM']);
+        $('#us-deceased').find('span[id=us-deceased-cases]').html(us_sttus[2]['NUM']);
         });
 
 

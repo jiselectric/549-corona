@@ -56,7 +56,12 @@ def getLiveNumber():
     sql = "SELECT y.LOC_NAME, y.LOC_NUM, y.CONFIRM, p.CONFIRM AS `BEFORE` FROM location y LEFT JOIN location p ON y.LOC_NUM = p.LOC_NUM AND p.REGIST_DTM=DATE_SUB(y.REGIST_DTM, INTERVAL 1 DAY) WHERE y.REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['location'] = curs.fetchall()
-    #print(result)
+
+    sql = "SELECT * FROM US_status WHERE REGIST_DTM=%s"
+    curs.execute(sql, yesterday)
+    result['US_status'] = curs.fetchall()
+
+    print(result)
     return jsonify(result)
 
 def downloadSVG():
@@ -153,6 +158,7 @@ def crawlNumberUS():
         else:
             sql = 'INSERT INTO US_status(STTUS_NUM, STTUS_NAME, NUM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))'
             curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
+
     conn.commit()
     return ""
 
