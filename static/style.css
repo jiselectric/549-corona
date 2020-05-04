@@ -910,3 +910,29 @@ ol, ul {
   text-align: center;
 }
 
+#delete-hotspot {
+    margin-left: 40%;
+    margin-top: 2%;
+}
+
+#edit-title {
+    font-size: 30px;
+}
+
+#edit-select {
+    width: 380px;
+    margin-top: 5%;
+}
+
+#delete-hotspot input[type='submit'] {
+    width: 50%;
+    height: 50%;
+    background-color: #4c638f;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+

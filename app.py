@@ -15,10 +15,20 @@ from googletrans import Translator
 app = Flask(__name__)
 app.secret_key = 'jiselectric'
 conn = pymysql.connect(host='localhost', user='root', password='123456789', db='corona')
+PASSWORD = '549agent'
 
 @app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
+
+@app.route('/login')
+def login():
+    pw = request.args.get('pw')
+    print(pw)
+    if pw == PASSWORD:
+        return jsonify({'response': 1})
+    else:
+        return jsonify({'response': 0})
 
 @app.route('/getSVG')
 def getSVG():
@@ -91,15 +101,18 @@ def crawlLocationConfirm():
             LOC_NAME = LOC_NAME[0].upper() + LOC_NAME[1:]
         CONFIRM = spans[1].text.replace(',', '')
         #print(LOC_NUM, LOC_NAME, CONFIRM)
-        sql = 'SELECT * FROM location WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND LOC_SN=%s'
+        sql = 'SELECT * FROM location WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND LOC_NUM=%s'
         curs.execute(sql, (LOC_NUM))
         result = curs.fetchall()
+        #print(result)
         if len(result) > 0:
             sql = 'UPDATE location SET CONFIRM=%s WHERE LOC_NUM=%s AND REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY)'
             curs.execute(sql, (CONFIRM, LOC_NUM))
-        sql = "INSERT INTO location(LOC_NUM, LOC_NAME, CONFIRM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))"
-        curs.execute(sql, (LOC_NUM, LOC_NAME, CONFIRM))
+        else:
+            sql = "INSERT INTO location(LOC_NUM, LOC_NAME, CONFIRM, REGIST_DTM) VALUES (%s, %s, %s, DATE_SUB(CURDATE(), INTERVAL 1 DAY))"
+            curs.execute(sql, (LOC_NUM, LOC_NAME, CONFIRM))
 
+    # status update으로 바꾸기
     lis = soup.find('ul', {'class': 'liveNum'}).find_all('li')
     for STTUS_NUM, li in enumerate(lis[1:]):
         STTUS_NAME = li.find('strong').contents[0]
@@ -354,12 +367,38 @@ def getHotspot():
 
 @app.route('/editHotspot')
 def editHotspot():
-    return render_template('editHotspot.html')
+    curs = conn.cursor()
+    sql = "SELECT P_NUM FROM positive"
+    curs.execute(sql)
+    num_list = curs.fetchall()
+    print(len(num_list))
+    #pprint(num_list)
+    #pprint(num_list.replace(",", ""))
+
+    return render_template('editHotspot.html', num_list=num_list)
+
+@app.route('/deleteHotspot')
+def deleteHotspot():
+    caseNum = request.args.get('number')
+
+
+    curs = conn.cursor()
+    sql = "SELECT P_SN FROM positive WHERE P_NUM=%s"
+    curs.execute(sql, (caseNum))
+    p_sn = curs.fetchone()
+
+    sql = "DELETE FROM hotspots WHERE P_SN=%s"
+    curs.execute(sql, p_sn)
+
+    sql = "DELETE FROM positive WHERE P_NUM=%s"
+    curs.execute(sql, caseNum)
+    conn.commit()
+
+    return redirect('/editHotspot')
 
 @app.route('/contact')
 def contact():
     return render_template('contact.html')
-
 
 @app.route('/admin')
 def admin():

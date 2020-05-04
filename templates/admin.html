@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% include 'header.html' %}
-<body>
+<body id="container">
     <div id="admin-container">
         <span class="admin-title"> Admin Page </span>
         <div class="button-container">
@@ -11,5 +11,20 @@
         </div>
     </div>
 </body>
+<script>
+    let password = prompt('Type Password');
+    let params = {pw : password};
 
+    
+    $.ajax({
+        url: '/login',
+        method: 'GET',
+        data: params
+    }).done(function(result){
+        if(result.response == 0) {
+            $('#container').html('');
+        }
+    });
+
+</script>
 </html>
