@@ -173,17 +173,16 @@ ol, ul {
 }
 
 .content-left {
-    height: 100%;
+    height: 650px;
     width: 49%;
     float: left;
 }
 
 .content-right {
-    height: 100%;
+    height: 750px;
     width: 49%;
     float: right;
 }
-
 
 #corona-status>h3 {
     font-size : 22px;
@@ -194,17 +193,17 @@ ol, ul {
     margin: 40px;
 }
 
-/**
-#corona-status #us-cases-title {
+#us-status-list>h3 {
     font-size : 22px;
     font-weight: 600;
     color: #000;
     position: relative;
     width: 100%;
-    margin: 40px;
+    margin: 0;
+    text-align: left;
+    margin-top: 5%;
+    margin-bottom: 5%;
 }
-**/
-
 
 #status-list>ul>li {
     display: inline-block;
@@ -295,6 +294,7 @@ ol, ul {
     text-align: center;
     margin-left: 35px;
     position: relative;
+    display: inline-block;
 }
 
 
@@ -421,6 +421,7 @@ ol, ul {
 }
 
 /** Radio Button **/
+/**
 #assessment-main>#answer-content>div>.container {
   display: block;
   position: relative;
@@ -435,7 +436,6 @@ ol, ul {
   user-select: none;
 }
 
-/* Hide the browser's default radio button */
 #assessment-main>#answer-content>div>.container>input {
   position: absolute;
   opacity: 0;
@@ -444,7 +444,6 @@ ol, ul {
   width: 0;
 }
 
-/* Create a custom radio button */
 .checkmark {
   position: absolute;
   top: 0;
@@ -455,29 +454,24 @@ ol, ul {
   border-radius: 50%;
 }
 
-/* On mouse-over, add a grey background color */
 .container:hover input ~ .checkmark {
   background-color: #ccc;
 }
 
-/* When the radio button is checked, add a blue background */
 .container input:checked ~ .checkmark {
   background-color: #2196F3;
 }
 
-/* Create the indicator (the dot/circle - hidden when not checked) */
 .checkmark:after {
   content: "";
   position: absolute;
   display: none;
 }
 
-/* Show the indicator (dot/circle) when checked */
 .container input:checked ~ .checkmark:after {
   display: block;
 }
 
-/* Style the indicator (dot/circle) */
 .container .checkmark:after {
   top: 9px;
   left: 9px;
@@ -486,6 +480,7 @@ ol, ul {
   border-radius: 50%;
   background: white;
 }
+*/
 
 #terms-container {
     margin-top: 2.5%;

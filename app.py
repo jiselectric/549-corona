@@ -61,7 +61,7 @@ def getLiveNumber():
     curs.execute(sql, yesterday)
     result['US_status'] = curs.fetchall()
 
-    print(result)
+    #print(result)
     return jsonify(result)
 
 def downloadSVG():
