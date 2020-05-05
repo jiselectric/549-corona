@@ -9,6 +9,7 @@
             <div id="corona-status" class="corona-status">
                 <h3>
                     <span id="cases-title"> Cases in  Korea </span>
+                    <span style="font-size: 12px;">(as of </span><span style="font-size: 12px;" class="data-time"></span><span style="font-size: 12px;">)</span>
                 </h3>
                 <div id="status-list" class="status-list">
                     <p class="add-sum sum-first"> = </p>
@@ -78,6 +79,7 @@
                 <div id="us-status-list" class="status-list">
                     <h3>
                         <span id="us-cases-title"> Cases in United States </span>
+                        <span style="font-size: 12px;">(as of </span><span style="font-size: 12px;" class="data-time"></span><span style="font-size: 12px;">)</span>
                     </h3>
                     <ul>
                         <li>
@@ -130,7 +132,10 @@
             </div>
         </div>
         <div id="content-right" class="content-right">
-            <div id="map-title"> Confirmed Cases by City and Province </div>
+            <div id="map-title">
+                Confirmed Cases by City and Province
+                <span style="font-size: 12px;">(as of </span><span style="font-size: 12px;" class="data-time"></span><span style="font-size: 12px;">)</span>
+            </div>
             <div class="map-wrapper">
                 <div id="map"></div>
             </div>
@@ -149,7 +154,10 @@
         return y+'-'+m+'-'+d;
     }
 
-    var now = getCurrentDate()
+    let now = getCurrentDate()
+    let datatime = now + " 00:00:00"
+
+    $('.data-time').html(datatime);
 
     $.ajax({
         url : '/getSVG',
@@ -196,11 +204,10 @@
             }
         });
 
-        var sttus = json.status;
-        var us_sttus = json.US_status
-        console.log(us_sttus);
+        let sttus = json.status;
+        let us_sttus = json.US_status
 
-        var confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
+        let confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
 
         $('#released').find('span[id=released-cases]').html(sttus[0]['NUM']);
         $('#isolated').find('span[id=isolated-cases]').html(sttus[1]['NUM']);
@@ -210,6 +217,7 @@
         $('#us-confirmed').find('span[id=us-confirmed-cases]').html(us_sttus[0]['NUM']);
         $('#us-released').find('span[id=us-released-cases]').html(us_sttus[1]['NUM']);
         $('#us-deceased').find('span[id=us-deceased-cases]').html(us_sttus[2]['NUM']);
+
         });
 
 

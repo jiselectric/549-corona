@@ -24,10 +24,13 @@ def index():
 @app.route('/login')
 def login():
     pw = request.args.get('pw')
-    print(pw)
+
     if pw == PASSWORD:
+        session['admin'] = pw
+        print('login success')
         return jsonify({'response': 1})
     else:
+        print('login fail')
         return jsonify({'response': 0})
 
 @app.route('/getSVG')
@@ -56,13 +59,13 @@ def getLiveNumber():
     sql = "SELECT y.LOC_NAME, y.LOC_NUM, y.CONFIRM, p.CONFIRM AS `BEFORE` FROM location y LEFT JOIN location p ON y.LOC_NUM = p.LOC_NUM AND p.REGIST_DTM=DATE_SUB(y.REGIST_DTM, INTERVAL 1 DAY) WHERE y.REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['location'] = curs.fetchall()
-    print(result['location'])
+    #print(result['location'])
 
     sql = "SELECT * FROM US_status WHERE REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['US_status'] = curs.fetchall()
 
-    print(result['US_status'])
+    print(result)
     return jsonify(result)
 
 def downloadSVG():
@@ -280,7 +283,13 @@ def assessmentFinish():
 
 @app.route('/showAssessment', methods=['POST', 'GET'])
 def showAssessment():
-    return render_template('showAssessment.html')
+
+    if "admin" not in session:
+        print('session not exists')
+        return redirect('/')
+    else:
+        print('session exists')
+        return render_template('showAssessment.html')
 
 @app.route('/loadAssessment')
 def loadAssessment():
@@ -323,11 +332,15 @@ def loadAssessment():
 
 @app.route('/addHotspot')
 def addHotspot():
-    curs = conn.cursor()
-    curs.execute("SELECT * FROM affiliation")
-    aff_list = curs.fetchall()
+    if 'admin' not in session:
+        print('add fail')
+        return redirect('/')
+    else:
+        curs = conn.cursor()
+        curs.execute("SELECT * FROM affiliation")
+        aff_list = curs.fetchall()
 
-    return render_template('addHotspot.html', aff_list=aff_list)
+        return render_template('addHotspot.html', aff_list=aff_list)
 
 @app.route('/startHotspot', methods=['GET', 'POST'])
 def startHotspot():
@@ -398,15 +411,18 @@ def getHotspot():
 
 @app.route('/editHotspot')
 def editHotspot():
-    curs = conn.cursor()
-    sql = "SELECT P_NUM FROM positive"
-    curs.execute(sql)
-    num_list = curs.fetchall()
-    print(len(num_list))
-    #pprint(num_list)
-    #pprint(num_list.replace(",", ""))
+    if 'admin' not in session:
+        print('edit fail')
 
-    return render_template('editHotspot.html', num_list=num_list)
+        return redirect('/')
+    else:
+        print('edit success')
+        curs = conn.cursor()
+        sql = "SELECT P_NUM FROM positive"
+        curs.execute(sql)
+        num_list = curs.fetchall()
+
+        return render_template('editHotspot.html', num_list=num_list)
 
 @app.route('/deleteHotspot')
 def deleteHotspot():
