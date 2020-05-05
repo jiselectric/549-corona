@@ -56,12 +56,13 @@ def getLiveNumber():
     sql = "SELECT y.LOC_NAME, y.LOC_NUM, y.CONFIRM, p.CONFIRM AS `BEFORE` FROM location y LEFT JOIN location p ON y.LOC_NUM = p.LOC_NUM AND p.REGIST_DTM=DATE_SUB(y.REGIST_DTM, INTERVAL 1 DAY) WHERE y.REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['location'] = curs.fetchall()
+    print(result['location'])
 
     sql = "SELECT * FROM US_status WHERE REGIST_DTM=%s"
     curs.execute(sql, yesterday)
     result['US_status'] = curs.fetchall()
 
-    #print(result)
+    print(result['US_status'])
     return jsonify(result)
 
 def downloadSVG():
@@ -151,6 +152,7 @@ def crawlNumberUS():
         sql = "SELECT * FROM US_status WHERE REGIST_DTM = DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND STTUS_NUM=%s"
         curs.execute(sql, (STTUS_NUM))
         result = curs.fetchall()
+        print(result)
 
         if len(result) > 0:
             sql = "UPDATE US_status SET NUM=%s WHERE STTUS_NUM=%s AND REGIST_DTM=DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
@@ -449,8 +451,11 @@ if __name__ == "__main__":
     crawlLocationConfirm()
     scheduler = BackgroundScheduler()
     scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
-                      start_date='{} 20:48:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
+                      start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
+    scheduler.add_job(func=crawlNumberUS, trigger='interval', hours=24,
+                      start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
+                      id='jiselectric_us_status')
     scheduler.start()
     print('Scheduler jiselectic-location Registered!')
 

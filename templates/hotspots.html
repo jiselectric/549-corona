@@ -7,8 +7,19 @@
 </head>
 <body>
     {% include 'format.html' %}
+    <style>
 
+        .hotspot-notice {
+            font-size: 20px;
+            margin-left: 35%;
+            margin-top: 5%;
+        }
+
+    </style>
     <div id="hotspot-list">
+        <div class="hotspot-notice">
+            No Confirmed Cases of COVID-19 in the Last 10 Days.
+        </div>
     </div>
 
 </body>
@@ -22,42 +33,45 @@
             methods : 'GET'
         }).done(function(data){
             let html = '';
+            dataLen = Object.keys(data).length;
 
-            $.each(data, function(p_sn, p_data){
-                let dates = p_data.dates;
-                console.log(dates);
-                console.log(data.p_sex);
-                html += '<div class="positive" data-sn="'+p_sn+'">';
-                html += '    <div class="positive-info">';
-                html += '        <span class="positive-title-num">';
-                html += '        Positive Case #'+p_data.p_num+'';
-                html += '        </span>';
-                html += '        <div class="positive-id">';
-                html += '            <span> Sex : '+p_data.p_sex+' | </span>';
-                html += '            <span> Age Group : '+p_data.p_age+' | </span>';
-                html += '            <span> Area : '+p_data.p_area+' | </span>';
-                html += '            <span> Affiliation : '+p_data.aff_nm+' </span>';
-                html += '        </div>';
-                html += '    </div>';
-                html += '    <div class="hotspots" style="display:none;">';
-                $.each(dates, function(date, times){
-                    html += '        <div class="hotspots-day">';
-                    html += '            <span class="hotspots-date"> '+date+' </span>';
-                    html += '            <div class="hotspots-desc">';
-                    $.each(times, function(time, desc){
-                        html += '                <div>';
-                        html += '                    <span> '+time+' </span>';
-                        html += '                    <span> '+desc+' </span>';
-                        html += '                </div>';
+            if(dataLen > 0) {
+                $.each(data, function(p_sn, p_data){
+                    let dates = p_data.dates;
+                    //console.log(dates);
+                    //console.log(data.p_sex);
+                    html += '<div class="positive" data-sn="'+p_sn+'">';
+                    html += '    <div class="positive-info">';
+                    html += '        <span class="positive-title-num">';
+                    html += '        Positive Case #'+p_data.p_num+'';
+                    html += '        </span>';
+                    html += '        <div class="positive-id">';
+                    html += '            <span> Sex : '+p_data.p_sex+' | </span>';
+                    html += '            <span> Age Group : '+p_data.p_age+' | </span>';
+                    html += '            <span> Area : '+p_data.p_area+' | </span>';
+                    html += '            <span> Affiliation : '+p_data.aff_nm+' </span>';
+                    html += '        </div>';
+                    html += '    </div>';
+                    html += '    <div class="hotspots" style="display:none;">';
+                    $.each(dates, function(date, times){
+                        html += '        <div class="hotspots-day">';
+                        html += '            <span class="hotspots-date"> '+date+' </span>';
+                        html += '            <div class="hotspots-desc">';
+                        $.each(times, function(time, desc){
+                            html += '                <div>';
+                            html += '                    <span> '+time+' </span>';
+                            html += '                    <span> '+desc+' </span>';
+                            html += '                </div>';
+                        });
+                    html += '            </div>';
+                    html += '        </div>';
                     });
-                html += '            </div>';
-                html += '        </div>';
+                    html += '    </div>';
+                    html += '</div>';
                 });
-                html += '    </div>';
-                html += '</div>';
-            });
 
-            $("#hotspot-list").html(html);
+                $("#hotspot-list").html(html);
+            }
         });
 
 </script>

@@ -57,6 +57,7 @@ ol, ul {
     }
 }
 
+
 #content-right > #map-title {
     font-size: 22px;
     margin: 40px;
@@ -609,11 +610,27 @@ ol, ul {
 }
 
 #assessment-next {
-    margin-left: 78%;
-    margin-top: 10%;
+    position: absolute;
+    margin-left: 58%;
+    margin-top: 7.2%;
     line-height: 56px;
     color: #fff;
     background: #0057B8;
+    border-radius: 999vw;
+    font-size: 18px;
+    display: block;
+    border: 0;
+    width: 224px;
+    cursor: pointer;
+}
+
+#assessment-pre {
+    position: absolute;
+    margin-left: 1%;
+    margin-top: 7.2%;
+    line-height: 56px;
+    color: #000000;
+    background: #d3d3d3;
     border-radius: 999vw;
     font-size: 18px;
     display: block;

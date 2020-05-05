@@ -105,12 +105,17 @@
             <input type="button" value="Previous">
         </a>
         -->
-
-        <input type="submit" value="Next" id="assessment-next"/>
+            <input type="button" value="Previous" id="assessment-pre" onclick="goBack()">
+            <input type="submit" value="Next" id="assessment-next"/>
     </form>
     </div>
 </body>
 <script>
+
+    function goBack() {
+        window.history.go(-1);
+    }
+
 </script>
 </html>
 
