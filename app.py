@@ -473,7 +473,7 @@ if __name__ == "__main__":
     scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
                       start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
-    scheduler.add_job(func=crawlNumberUS, trigger='interval', hours=24,
+    scheduler.add_job(func=crawlNumberUS, trigger='interval', hours=1,
                       start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_us_status')
     scheduler.start()
