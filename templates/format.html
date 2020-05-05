@@ -1,15 +1,70 @@
- <div class="container">
+    <style>
+    .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #0057B8;
+        overflow-x: hidden;
+        transition: 0.5s ease-in-out;
+        padding-top: 60px;
+    }
+
+    .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #fff;
+        display: block;
+        transition: 0.2s ease-in-out;
+    }
+
+    .sidenav a:hover,
+    .offcanvas a:focus {
+        color: #000;
+    }
+
+    .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px !important;
+        margin-left: 50px;
+    }
+
+    @media screen and (min-width: 1180px) {
+        .slideBtn {
+            display: none;
+        }
+    }
+
+    @media screen and (max-height:450px) {
+        .sidenav {
+            padding-top: 15px;
+        }
+
+        .sidenav a {
+            font-size: 18px;
+        }
+    }
+    </style>
+
+    <div class="container">
         <!-- // Header -->
         <div class="top-header">
             <div class="header-left">
                 <div id="sidenav" class="sidenav">
-                    <div id="slidebtn" class="slideBtn">&#9776;</div>
+                    <a href="#" class="closebtn" onclick='closeNav()'>x</a>
+                    <a href="/"> Updates </a>
+                    <a href="/assessment"> Assessment </a>
+                    <a href="/hotspots"> Hotspots </a>
+                    <a href="/contact"> Contact </a>
 
-                    <a style="display:none;" href="/"> Updates </a>
-                    <a style="display:none;" href="/assessment"> Assessment </a>
-                    <a style="display:none;" href="/hotspots"> Hotspots </a>
-                    <a style="display:none;" href="/contact"> Contact </a>
                 </div>
+                <span id='slidebtn' class='slideBtn' onclick='openNav()'> &#9776; </span>
+
                 <h1 id="header-title" class="header-title"><a href="/"> 549 Hospital COVID-19 Hotline </a></h1>
             </div>
             <div class="header-right">
@@ -48,21 +103,13 @@
 
     <script>
 
-    $(document).ready(function(){
-        $(".slideBtn").click(function(){
-        if($("#sidenav").width() == 0){
-            document.getElementById("sidenav").style.width = "250px";
-            document.getElementById("main-content").style.paddingRight = "250px";
-            document.getElementById("slidebtn").style.paddingRight = "250px";
-            $("#sidenav").find("a").show();
-        }else{
-            document.getElementById("sidenav").style.width = "0";
-            document.getElementById("main-content").style.paddingRight = "0";
-            document.getElementById("slidebtn").style.paddingRight = "0";
-            $("#sidenav").find("a").hide();
-            }
-        });
-    });
+    function openNav() {
+        document.getElementById('sidenav').style.width = '250px';
+    }
+
+    function closeNav() {
+        document.getElementById('sidenav').style.width = '0';
+    }
 
     $(window).resize(function() {
         var windowWidth = $(window).width();

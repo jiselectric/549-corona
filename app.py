@@ -434,6 +434,10 @@ def contact():
 def admin():
     return render_template('admin.html')
 
+@app.route('/menubar')
+def menubar():
+    return render_template('menubar.html')
+
 @app.context_processor
 def override_url_for():
     return dict(url_for=dated_url_for)

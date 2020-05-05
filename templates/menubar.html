@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+{% include 'header.html' %}
+<!-- {% include 'footer.html' %} -->
+<body>
+    {% include 'ex.html' %}
+    <div id="main-content" class="main-content">
+        <div id="content-left" class="content-left">
+            <div id="corona-status" class="corona-status">
+                <h3>
+                    <span id="cases-title"> Cases in  Korea </span>
+                </h3>
+                <div id="status-list" class="status-list">
+                    <p class="add-sum sum-first"> = </p>
+                    <p class="add-sum add-first"> + </p>
+                    <p class="add-sum add-second"> + </p>
+                    <ul>
+                        <li>
+                            <div id="confirmed" class="confirmed">
+                                <div id="confirmed-title" class="status-title">
+                                    <div> Confirmed Cases </div>
+                                    <div class="status-title-content">
+                                        <em id="accumulation"> (accumulation) </em>
+                                    </div>
+                                </div>
+                                <div id="confirmed-number" class="confirmed-number status-number">
+                                    <span id="confirmed-cases"></span>
+                                </div>
+                                <div id="confirmed-change" class="confirmed-change status-change">
+                                    <!-- <span id="daily-change"> Daily Change <span id="confirm-change"></span></span> -->
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="released" class="released">
+                                <div id="released-title" class="status-title">
+                                    <div> Released from Isolation </div>
+                                    <div class="status-title-content">
+                                        <em id="quarantine"> (Released from Quarantine) </em>
+                                    </div>
+                                </div>
+                                <div id="released-number" class="status-number">
+                                    <span id="released-cases"></span>
+                                </div>
+                                <div class="status-change">
+                                    <span id="release-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="isolated" class="isolated">
+                                <div class="status-title">
+                                    <div> Isolated </div>
+                                </div>
+                                <div class="status-number">
+                                    <span id="isolated-cases"></span>
+                                </div>
+                                <div class="status-change">
+                                    <span id="isolate-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="deceased" class="deceased">
+                                <div class="status-title">
+                                    <div> Deceased </div>
+                                </div>
+                                <div class="status-number">
+                                    <span id="deceased-cases"></span>
+                                </div>
+                                <div class="status-change">
+                                    <span id="decease-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div id="us-status-list" class="status-list">
+                    <h3>
+                        <span id="us-cases-title"> Cases in United States </span>
+                    </h3>
+                    <ul>
+                        <li>
+                            <div id="us-confirmed" class="us-confirmed">
+                                <div id="us-confirmed-title" class="us-status-title">
+                                    <div> Confirmed Cases </div>
+                                    <div class="status-title-content">
+                                        <em id="us-accumulation"> (accumulation) </em>
+                                    </div>
+                                </div>
+                                <div id="us-confirmed-number" class="confirmed-number us-status-number">
+                                    <span id="us-confirmed-cases"></span>
+                                </div>
+                                <div id="us-confirmed-change" class="confirmed-change us-status-change">
+                                    <!-- <span id="us-daily-change"> Daily Change <span id="us-confirm-change"></span></span> -->
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="us-released" class="us-released">
+                                <div id="us-released-title" class="us-status-title">
+                                    <div> Released from Isolation </div>
+                                    <div class="status-title-content">
+                                        <em id="us-quarantine"> (Released from Quarantine) </em>
+                                    </div>
+                                </div>
+                                <div id="us-released-number" class="us-status-number">
+                                    <span id="us-released-cases"></span>
+                                </div>
+                                <div class="us-status-change">
+                                    <span id="us-release-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div id="us-deceased" class="us-deceased">
+                                <div class="us-status-title">
+                                    <div> Deceased </div>
+                                </div>
+                                <div class="us-status-number">
+                                    <span id="us-deceased-cases"></span>
+                                </div>
+                                <div class="us-status-change">
+                                    <span id="us-deceased-change"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="content-right" class="content-right">
+            <div id="map-title"> Confirmed Cases by City and Province </div>
+            <div class="map-wrapper">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    getCurrentDate = function(){
+        var now = new Date();
+        var y = now.getFullYear();
+        var m = now.getMonth() + 1;
+        var d = now.getDate();
+
+        m = m < 10 ? '0'+m : ''+m;
+        d = d < 10 ? '0'+d : ''+d;
+        return y+'-'+m+'-'+d;
+    }
+
+    var now = getCurrentDate()
+
+    $.ajax({
+        url : '/getSVG',
+        method : 'GET',
+        async: false
+    }).done(function(html){
+        $('#map').html(html);
+    });
+
+    $.ajax({
+        url: '/getLiveNumber',
+        method: 'GET',
+        data: {date : now},
+        async: false
+    }).done(function (json) {
+        var loc = json.location;
+        $.each(loc, function(pIndex, pValue){
+            var city = 'map_city' + pValue.LOC_NUM;
+            var confirm = parseInt(pValue.CONFIRM);
+            var color = '#FFFFFF';
+
+            if (confirm < 20) {
+                color = "#ffe8e7";
+            } else if(confirm > 20 && confirm < 50){
+                color = "#F6BDC0";
+            } else if(confirm > 50 && confirm < 300) {
+                color = '#F1959B'
+            } else if(confirm > 300 && confirm < 500) {
+                color = '#F07470'
+            } else if(confirm > 500 && confirm < 5000) {
+                color = '#EA4C46'
+            } else if(confirm > 5000 && confirm < 10000) {
+                color = '#DC1C13'
+            }
+
+            $(".map_city"+pValue.LOC_NUM).attr('fill', color);
+            $('button[data-city="'+city+'"]').find('span[class=name]').html(pValue.LOC_NAME);
+            $('button[data-city="'+city+'"]').find('span[class=num]').html(pValue.CONFIRM);
+
+            if(pValue.BEFORE != null) {
+                var delta = parseInt(pValue.CONFIRM) - parseInt(pValue.BEFORE);
+                delta = (delta > 0) ? '+'+delta : ''+delta;
+                $('button[data-city="'+city+'"]').find('span[class=before]').html('('+delta+')');
+            }
+        });
+
+        var sttus = json.status;
+        var us_sttus = json.US_status
+        console.log(us_sttus);
+
+        var confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
+
+        $('#released').find('span[id=released-cases]').html(sttus[0]['NUM']);
+        $('#isolated').find('span[id=isolated-cases]').html(sttus[1]['NUM']);
+        $('#deceased').find('span[id=deceased-cases]').html(sttus[2]['NUM']);
+        $('#confirmed').find('span[id=confirmed-cases]').html(confirm);
+
+        $('#us-confirmed').find('span[id=us-confirmed-cases]').html(us_sttus[0]['NUM']);
+        $('#us-released').find('span[id=us-released-cases]').html(us_sttus[1]['NUM']);
+        $('#us-deceased').find('span[id=us-deceased-cases]').html(us_sttus[2]['NUM']);
+        });
+
+</script>
+</html>
+
