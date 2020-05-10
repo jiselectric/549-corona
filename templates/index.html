@@ -205,8 +205,10 @@
         });
 
         let sttus = json.status;
-        let us_sttus = json.US_status
+        let us_sttus = json.US_status;
 
+        console.log(json);
+        
         let confirm = parseInt(sttus[0]['NUM']) + parseInt(sttus[1]['NUM']) + parseInt(sttus[2]['NUM']);
 
         $('#released').find('span[id=released-cases]').html(sttus[0]['NUM']);

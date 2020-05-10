@@ -15,7 +15,10 @@ from googletrans import Translator
 app = Flask(__name__)
 app.secret_key = 'jiselectric'
 conn = pymysql.connect(host='localhost', user='root', password='123456789', db='corona')
+
+# DB로 해주
 PASSWORD = '549agent'
+# DELETE QUERY 삭제
 
 @app.route('/', methods=['GET'])
 def index():
@@ -138,14 +141,12 @@ def crawlLocationConfirm():
 
     conn.commit()
 
-@app.route('/crawlUS')
-def crawlNumberUS():
     res = requests.get('https://www.worldometers.info/coronavirus/country/us/')
     soup = BeautifulSoup(res.text, 'html.parser')
     curs = conn.cursor()
     div = soup.find('div', {'class': 'content-inner'})
-    divs = div.find_all('div', {'class':'maincounter-number'})
-    #titles = div.find_all('div', {'id':'maincounter-wrap'})
+    divs = div.find_all('div', {'class': 'maincounter-number'})
+    # titles = div.find_all('div', {'id':'maincounter-wrap'})
     name = ['Corona Cases', 'Death', 'Recovered']
 
     for STTUS_NUM, d in enumerate(divs[0:]):
@@ -165,7 +166,6 @@ def crawlNumberUS():
             curs.execute(sql, (STTUS_NUM, STTUS_NAME, NUM))
 
     conn.commit()
-    return ""
 
 @app.route('/assessment', methods=['GET', 'POST'])
 def assessment():
@@ -473,9 +473,6 @@ if __name__ == "__main__":
     scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
                       start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
-    scheduler.add_job(func=crawlNumberUS, trigger='interval', hours=1,
-                      start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
-                      id='jiselectric_us_status')
     scheduler.start()
     print('Scheduler jiselectic-location Registered!')
 
