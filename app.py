@@ -16,9 +16,8 @@ app = Flask(__name__)
 app.secret_key = 'jiselectric'
 conn = pymysql.connect(host='localhost', user='root', password='123456789', db='corona')
 
-# DB로 해주
+# SET BY DB
 PASSWORD = '549agent'
-# DELETE QUERY 삭제
 
 @app.route('/', methods=['GET'])
 def index():
@@ -330,6 +329,16 @@ def loadAssessment():
     #pprint(result)
     return jsonify(result)
 
+@app.route('/deleteAssessment')
+def deleteAssessment():
+    curs = conn.cursor()
+    sql = "DELETE FROM users"
+
+    curs.execute(sql)
+    conn.commit()
+
+    return ""
+
 @app.route('/addHotspot')
 def addHotspot():
     if 'admin' not in session:
@@ -473,6 +482,9 @@ if __name__ == "__main__":
     scheduler.add_job(func=crawlLocationConfirm, trigger='interval', hours=24,
                       start_date='{} 00:01:00'.format(str(datetime.datetime.now() + datetime.timedelta(days=1))[:10]),
                       id='jiselectric_location')
+    scheduler.add_job(func=deleteAssessment, trigger='interval', hours=24,
+                      start_date='{} 00:01:00'.format(datetime.datetime.now().date()),
+                      id='jiselectric_delete')
     scheduler.start()
     print('Scheduler jiselectic-location Registered!')
 
