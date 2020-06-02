@@ -17,7 +17,7 @@ app.secret_key = 'jiselectric'
 conn = pymysql.connect(host='localhost', user='root', password='123456789', db='corona')
 
 # SET BY DB
-PASSWORD = '549agent'
+# PASSWORD = '549agent'
 
 @app.route('/', methods=['GET'])
 def index():
@@ -27,13 +27,42 @@ def index():
 def login():
     pw = request.args.get('pw')
 
-    if pw == PASSWORD:
+    curs = conn.cursor()
+    sql = 'SELECT password FROM password'
+    curs.execute(sql)
+
+    result = curs.fetchone()[0]
+
+    if pw == result:
         session['admin'] = pw
         print('login success')
         return jsonify({'response': 1})
     else:
         print('login fail')
         return jsonify({'response': 0})
+
+
+@app.route('/changePassword')
+def changePassword():
+
+    curs = conn.cursor()
+    sql = 'SELECT password FROM password'
+    curs.execute(sql)
+    result = curs.fetchone()[0]
+
+
+    return render_template('changePassword.html', password=result)
+
+@app.route('/changePW')
+def changePW():
+    changePW = request.args.get('change-pw')
+
+    curs = conn.cursor()
+    sql = 'UPDATE password SET password=%s'
+    curs.execute(sql, (changePW))
+    conn.commit()
+
+    return redirect('/')
 
 @app.route('/getSVG')
 def getSVG():
