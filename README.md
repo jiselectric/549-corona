@@ -23,3 +23,16 @@
 - Main Page
 <img width="1344" alt="스크린샷 2021-06-06 20 52 39" src="https://user-images.githubusercontent.com/35610628/120923372-28ea2a00-c709-11eb-8c10-b83e686bd559.png">
 
+  - provides real-time COVID-19 cases in United States and South Korea and cases by city and province 
+    - United States Cases: https://www.worldometers.info/coronavirus/
+    - South Korea Cases: http://ncov.mohw.go.kr/
+  - crawled cases collected by Python library Beautiful Soup stored in database on daily basis    
+  - provides link to U.S. Government, KCDA, and USFK Websites
+
+
+- Self Assessment
+<img width="1329" alt="스크린샷 2021-06-06 21 11 54" src="https://user-images.githubusercontent.com/35610628/120923892-ebd36700-c70b-11eb-8258-2f870c9fd065.png">
+
+<img width="1329" alt="스크린샷 2021-06-06 21 11 54" src="https://user-images.githubusercontent.com/35610628/120923892-ebd36700-c70b-11eb-8258-2f870c9fd065.png">
+  
+
