@@ -33,8 +33,6 @@
 - Self Assessment
 <img width="1329" alt="스크린샷 2021-06-06 21 11 54" src="https://user-images.githubusercontent.com/35610628/120923892-ebd36700-c70b-11eb-8258-2f870c9fd065.png">
 
-<img width="1329" alt="스크린샷 2021-06-06 21 11 54" src="https://user-images.githubusercontent.com/35610628/120923892-ebd36700-c70b-11eb-8258-2f870c9fd065.png">
-
 <img width="1342" alt="스크린샷 2021-06-06 21 14 52" src="https://user-images.githubusercontent.com/35610628/120923980-60a6a100-c70c-11eb-8591-7370629b7b70.png">
 
 <img width="1295" alt="스크린샷 2021-06-06 21 16 36" src="https://user-images.githubusercontent.com/35610628/120924007-816ef680-c70c-11eb-9e2b-0c1767c9942b.png">
