@@ -20,7 +20,7 @@
 
 ### Service in Detail 
 
-- Main Page
+1. Main Page
 <img width="1344" alt="스크린샷 2021-06-06 20 52 39" src="https://user-images.githubusercontent.com/35610628/120923372-28ea2a00-c709-11eb-8c10-b83e686bd559.png">
 
   - provides real-time COVID-19 cases in United States and South Korea and cases by city and province 
@@ -30,7 +30,7 @@
   - provides link to U.S. Government, KCDA, and USFK Websites
 
 
-- Self Assessment
+2. Self Assessment
 <img width="1329" alt="스크린샷 2021-06-06 21 11 54" src="https://user-images.githubusercontent.com/35610628/120923892-ebd36700-c70b-11eb-8258-2f870c9fd065.png">
 
 <img width="1310" alt="스크린샷 2021-06-06 21 27 08" src="https://user-images.githubusercontent.com/35610628/120924303-f5f66500-c70d-11eb-8fc1-2ebaa27ec941.png">
@@ -47,14 +47,14 @@
   - Without manually repetitively asking questions on line, the hospital's response team can easily access the necessary information with the provided number
   - The sensitive data are strictly accessbile by the individuals in hospital, and subject to automatic destruction after 7-days
 
-- Hotspot
+3. Hotspot
 <img width="1312" alt="스크린샷 2021-06-06 21 23 19" src="https://user-images.githubusercontent.com/35610628/120924197-6bae0100-c70d-11eb-88f4-898325180f9a.png">
 
 <img width="1337" alt="스크린샷 2021-06-06 21 22 52" src="https://user-images.githubusercontent.com/35610628/120924184-5c2eb800-c70d-11eb-9571-ccaeb68ef244.png">
 
   - After hotspots are confirmed by the USFK's investigation, the COVID-19 response team can post detailed information on visited hotspots
 
-- Contact 
+4. Contact 
 <img width="1312" alt="스크린샷 2021-06-06 21 25 28" src="https://user-images.githubusercontent.com/35610628/120924261-b9c30480-c70d-11eb-9cd2-53cf707625d7.png">
 
   - Contact informatino of 549th Hospital, and KDCA 
