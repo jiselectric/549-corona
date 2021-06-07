@@ -18,7 +18,7 @@
   - MySQL
   - AWS 
 
-### Service in Detail 
+### Application Overview 
 
 1. Main Page
 <img width="1344" alt="스크린샷 2021-06-06 20 52 39" src="https://user-images.githubusercontent.com/35610628/120923372-28ea2a00-c709-11eb-8c10-b83e686bd559.png">
