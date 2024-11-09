@@ -3,7 +3,7 @@
 ![usfk](https://user-images.githubusercontent.com/35610628/120923767-330d2800-c70b-11eb-8aaf-b700077207ad.png)
 
 ### Description
-  - URL: www.usfkcorona.com
+  - URL: www.usfkcorona.com (closed)
   - a web-service designed to digitize the USFK 549th Hospital's COVID-19 Response 
   - the web-service was designed and deployed during my military service in 549th Hospital as the hospital's linguist and translator, later received the Army Commendation Medal for honorable service
 
@@ -57,4 +57,4 @@
 4. Contact 
 <img width="1312" alt="스크린샷 2021-06-06 21 25 28" src="https://user-images.githubusercontent.com/35610628/120924261-b9c30480-c70d-11eb-9cd2-53cf707625d7.png">
 
-  - Contact informatino of 549th Hospital, and KDCA 
+  - Contact information of 549th Hospital, and KDCA 
